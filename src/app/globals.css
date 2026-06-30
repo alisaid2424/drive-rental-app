@@ -1,0 +1,176 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #fff8f7;
+  --foreground: #271718;
+  --card: #ffffff;
+  --card-foreground: #271718;
+  --popover: #ffffff;
+  --popover-foreground: #271718;
+  --primary: #ff2056;
+  --primary-foreground: #ffffff;
+  --secondary: #5c5f61;
+  --secondary-foreground: #ffffff;
+  --muted: #f9dcdc;
+  --muted-foreground: #5b4041;
+  --accent: #ffe9e9;
+  --accent-foreground: #b90538;
+  --destructive: #ba1a1a;
+  --destructive-foreground: #ffffff;
+  --border: #e3bdbf;
+  --input: #e3bdbf;
+  --ring: #bc0b3b;
+  --radius: 0.75rem;
+  --sidebar: #fff8f7;
+  --sidebar-foreground: #271718;
+  --sidebar-primary: #b90538;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ffe9e9;
+  --sidebar-accent-foreground: #b90538;
+  --sidebar-border: #e3bdbf;
+  --sidebar-ring: #bc0b3b;
+}
+
+.dark {
+  --background: #1a0f10;
+  --foreground: #fff8f7;
+  --card: #271718;
+  --card-foreground: #fff8f7;
+  --popover: #271718;
+  --popover-foreground: #fff8f7;
+  --primary: #ffb2b7;
+  --primary-foreground: #67001a;
+  --secondary: #c4c7c9;
+  --secondary-foreground: #2e3133;
+  --muted: #5b4041;
+  --muted-foreground: #e3bdbf;
+  --accent: #5b4041;
+  --accent-foreground: #ffb2b7;
+  --destructive: #ffb4ab;
+  --destructive-foreground: #690005;
+  --border: #5b4041;
+  --input: #5b4041;
+  --ring: #ffb2b7;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(185, 5, 56, 0.1);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(185, 5, 56, 0.2);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground selection:bg-primary/20 selection:text-primary min-h-screen;
+  }
+
+  html {
+    @apply font-sans h-full scroll-smooth;
+  }
+  input[type="date"] {
+    position: relative;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .icon-btn-header {
+    @apply p-2 rounded-full cursor-pointer text-slate-600 hover:text-rose-500 transition-colors hover:bg-rose-50/50;
+  }
+  .element-center {
+    @apply flex items-center justify-center;
+  }
+  .container-custom {
+    @apply px-5 md:px-10 lg:px-20 xl:px-24;
+  }
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+
+  .settings-card {
+    @apply bg-white/60 border border-white/30 shadow-lg shadow-rose-500/10 rounded-3xl p-6 sm:p-10;
+  }
+
+  .process-icon-container {
+    @apply w-24 h-24 bg-white rounded-[32px] flex items-center justify-center mb-10 shadow-xl shadow-rose-500/5 transition-all duration-500;
+  }
+
+  .process-card:hover .process-icon-container {
+    @apply bg-primary -rotate-6;
+  }
+
+  .glass-panel {
+    @apply bg-white/60 backdrop-blur-3xl rounded-[2rem] border border-white/70 shadow-xl shadow-rose-500/5;
+  }
+}
