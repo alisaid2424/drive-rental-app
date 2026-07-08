@@ -1,14 +1,37 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { Routes } from "./constants/enums";
+import clerkClient from "@clerk/clerk-sdk-node";
 
-export default clerkMiddleware();
+const isProtected = createRouteMatcher(["/admin(.*)"]);
+
+const UserRole = {
+  ADMIN: "ADMIN",
+  USER: "USER",
+} as const;
+
+export default clerkMiddleware(async (auth, req) => {
+  const { userId } = await auth();
+
+  if (isProtected(req) && !userId) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  if (userId) {
+    const pathname = req.nextUrl.pathname;
+    const user = await clerkClient.users.getUser(userId);
+    const role = user.publicMetadata.role as string | undefined;
+
+    const isAdminRoute = pathname.startsWith(Routes.ADMIN);
+
+    if (isAdminRoute && role !== UserRole.ADMIN) {
+      return NextResponse.redirect(new URL(Routes.ROOT, req.url));
+    }
+  }
+
+  return NextResponse.next();
+});
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
-    "/(api|trpc)(.*)",
-    // Always run for Clerk-specific frontend API routes
-    "/__clerk/(.*)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

@@ -28,6 +28,8 @@ const Header = () => {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname === href;
 
+  const isAdmin = user?.publicMetadata.role === "ADMIN";
+
   if (pathname.startsWith(Routes.ADMIN)) return null;
 
   return (
@@ -61,25 +63,27 @@ const Header = () => {
             <X className="size-5 group-hover:rotate-180 transition duration-300" />
           </Button>
 
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => {
-                scrollTo(0, 0);
-                setIsOpen(false);
-              }}
-              className={cn(
-                "transition-all duration-300 text-sm tracking-tighter",
-                "max-lg:w-full max-lg:text-base max-lg:font-bold max-lg:hover:ps-2",
-                isActive(link.href)
-                  ? "text-rose-500 lg:border-b-2 lg:border-rose-500 lg:pb-1 lg:font-semibold"
-                  : "text-slate-600 hover:text-rose-400",
-              )}
-            >
-              {link.name}
-            </Link>
-          ))}
+          {navLinks
+            .filter((link) => link.href !== Routes.ADMIN || isAdmin)
+            .map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => {
+                  scrollTo(0, 0);
+                  setIsOpen(false);
+                }}
+                className={cn(
+                  "transition-all duration-300 text-sm tracking-tighter",
+                  "max-lg:w-full max-lg:text-base max-lg:font-bold max-lg:hover:ps-2",
+                  isActive(link.href)
+                    ? "text-rose-500 lg:border-b-2 lg:border-rose-500 lg:pb-1 lg:font-semibold"
+                    : "text-slate-600 hover:text-rose-400",
+                )}
+              >
+                {link.name}
+              </Link>
+            ))}
 
           <div className="mt-4 h-px w-full bg-rose-100 lg:hidden" />
           {/* Mobile Only Call-to-Action */}
