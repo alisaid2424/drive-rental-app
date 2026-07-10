@@ -103,7 +103,7 @@ const AdminSidebar = () => {
         </Link>
 
         <Link
-          href="#"
+          href={Routes.ROOT}
           className="w-full flex items-center gap-3 py-4 px-4 lg:px-6 text-secondary hover:text-primary transition-all"
         >
           <LogOut className="w-5 h-5" />

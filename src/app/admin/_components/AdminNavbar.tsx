@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Car, Sparkles, Bell, Search } from "lucide-react";
-import Image from "next/image";
 import { Routes } from "@/constants/enums";
+import { UserButton } from "@clerk/nextjs";
 
 const AdminNavbar = () => {
   return (
@@ -42,17 +42,15 @@ const AdminNavbar = () => {
             <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
           </button>
 
-          <button className="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-md shrink-0 active:scale-95 transition-all">
-            <Image
-              alt="Owner Profile"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmwf6wjk9M5PX5WYotu6yA64kBLouWWWIeP7VgDZq3DT8Iwrd2E2j6OqRVnkuami-o8jzXXuz85yuszJUW9dQVtks8pc-WuPFBnK73z-cqt1luvpKwXnphUYmIq-149yJVKQGTVqf8uSp6pMjsoZvXtD34qta2EcyMvTUJmIFRQ-T90bMUZwkW3M7LzZSSHQIVWvMSyheZ3lnpUQIjJEHvA5IaeUX6ADoWVFvZQ1J37Z0eRbE8--pvrYmxL5_l3tCpHgoFjljAxj4"
-              className="w-full h-full object-cover"
-              width={100}
-              height={100}
-              loading="eager"
-              priority
-            />
-          </button>
+          <UserButton
+            appearance={{
+              elements: {
+                userButtonAvatarBox: "!size-10 border-2 border-white shadow-md",
+                userButtonTrigger:
+                  "!size-10 active:scale-95 transition-all outline-none",
+              },
+            }}
+          />
         </div>
       </div>
     </header>

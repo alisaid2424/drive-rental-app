@@ -9,6 +9,7 @@ import { Pages, Routes } from "@/constants/enums";
 import { useClerk, UserButton, useUser } from "@clerk/nextjs";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { UserRole } from "@prisma/client";
 
 const navLinks = [
   { name: "Home", href: Routes.ROOT },
@@ -28,7 +29,7 @@ const Header = () => {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname === href;
 
-  const isAdmin = user?.publicMetadata.role === "ADMIN";
+  const isAdmin = user?.publicMetadata.role === UserRole.ADMIN;
 
   if (pathname.startsWith(Routes.ADMIN)) return null;
 
@@ -114,7 +115,14 @@ const Header = () => {
 
           {/* Auth Controls */}
           {user ? (
-            <UserButton>
+            <UserButton
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: "!size-9",
+                  userButtonTrigger: "!size-9 active:scale-95 transition-all",
+                },
+              }}
+            >
               <UserButton.MenuItems>
                 <UserButton.Action
                   label="My Booking"
