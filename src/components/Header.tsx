@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { User, Bell, Search, Menu, X, TicketPlus, Heart } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { User, Bell, Search, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Pages, Routes } from "@/constants/enums";
-import { useClerk, UserButton, useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { UserRole } from "@prisma/client";
+import UserMenu from "./UserMenu";
 
 const navLinks = [
   { name: "Home", href: Routes.ROOT },
@@ -21,7 +22,6 @@ const navLinks = [
 
 const Header = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const { user } = useUser();
   const { openSignIn } = useClerk();
   const [isOpen, setIsOpen] = useState(false);
@@ -115,28 +115,7 @@ const Header = () => {
 
           {/* Auth Controls */}
           {user ? (
-            <UserButton
-              appearance={{
-                elements: {
-                  userButtonAvatarBox: "!size-9",
-                  userButtonTrigger: "!size-9 active:scale-95 transition-all",
-                },
-              }}
-            >
-              <UserButton.MenuItems>
-                <UserButton.Action
-                  label="My Booking"
-                  labelIcon={<TicketPlus className="w-4 h-4 text-gray-600" />}
-                  onClick={() => router.push(Pages.MYBOOKINGS)}
-                />
-
-                <UserButton.Action
-                  label="My Favorite"
-                  labelIcon={<Heart className="w-4 h-4 text-gray-600" />}
-                  onClick={() => router.push(Pages.FAVORITE)}
-                />
-              </UserButton.MenuItems>
-            </UserButton>
+            <UserMenu />
           ) : (
             <button onClick={() => openSignIn()} className="icon-btn-header">
               <User size={18} />

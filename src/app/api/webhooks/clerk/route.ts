@@ -2,7 +2,11 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/clerk-sdk-node";
-import { createUser, UpdateUser, deleteUser } from "@/server/actions/user";
+import {
+  createUser,
+  deleteUserFromDB,
+  UpdateUser,
+} from "@/server/actions/user";
 import { User, UserRole } from "@prisma/client";
 import prisma from "@/lib/db";
 
@@ -139,7 +143,7 @@ export async function POST(req: Request) {
         const role = public_metadata?.role as UserRole;
 
         if (role) {
-          await prisma.user.update({
+          await prisma.user.updateMany({
             where: { clerkUserId: id },
             data: { role },
           });
@@ -159,8 +163,8 @@ export async function POST(req: Request) {
           });
         }
 
-        await deleteUser(eventData.id);
-        console.log("User deleted");
+        await deleteUserFromDB(eventData.id);
+
         break;
       }
 

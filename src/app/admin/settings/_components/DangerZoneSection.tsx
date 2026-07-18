@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
+import DangerZoneButton from "./DangerZoneButton";
 
 const DangerZoneSection = () => {
   return (
@@ -20,7 +20,8 @@ const DangerZoneSection = () => {
             </p>
           </div>
         </div>
-        <Button variant="destructive">Deactivate Account</Button>
+
+        <DangerZoneButton />
       </div>
     </section>
   );

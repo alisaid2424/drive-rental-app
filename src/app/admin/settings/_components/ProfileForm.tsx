@@ -11,25 +11,47 @@ import {
 } from "@/zod-schemas/settings/accountSettingsSchema";
 import { TextAreaWithLabel } from "@/components/inputs/TextAreaWithLabel";
 import { InputWithLabel } from "@/components/inputs/InputWithLabel";
+import { User } from "@prisma/client";
+import { updateProfile } from "@/server/actions/user";
+import { toast } from "sonner";
+import { useEffect } from "react";
 
-const ProfileForm = () => {
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+type Props = {
+  user: User | null;
+};
 
+const ProfileForm = ({ user }: Props) => {
   const form = useForm<TProfileFormSchema>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      fullName: "Alexander Sterling",
-      email: "alexander@luxedrive.vip",
-      bio: "Curating the world's most exclusive driving experiences...",
-      phone: "+1 (555) 000-8888",
-      timezone,
+      fullName: user?.name ?? "",
+      email: user?.email ?? "",
+      bio: user?.bio ?? "",
+      phone: user?.phone ?? "",
+      timezone:
+        user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
   });
 
-  const onSubmit = async (data: TProfileFormSchema) => {
-    console.log(data);
+  const { isSubmitting } = form.formState;
 
-    // await updateProfile(data)
+  useEffect(() => {
+    const event = new CustomEvent("form-submitting-state", {
+      detail: { loading: isSubmitting },
+    });
+
+    dispatchEvent(event);
+  }, [isSubmitting]);
+
+  const onSubmit = async (data: TProfileFormSchema) => {
+    const result = await updateProfile(data);
+
+    if (!result.success) {
+      toast.error(result.message);
+      return;
+    }
+
+    toast.success(result.message);
   };
 
   return (
@@ -42,11 +64,14 @@ const ProfileForm = () => {
       >
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8">
           <div className="relative group">
-            <div className="w-24 h-24 rounded-2xl overflow-hidden ring-4 ring-secondary shadow-md relative">
+            <div className="w-24 h-24 rounded-2xl overflow-hidden ring-2 ring-gray-300 shadow-md relative">
               <Image
                 alt="Profile Avatar"
                 className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB99jYeepIeZjL5FJnHy5KC2vdZGs0z5-gJlWWBN4--lbjB_HP7X4PhpNXWs1n0TAZLzUZ9ZRqPcpGwxYJIVyu60qpU_i00w9ahIdwIrKrMJJuhQn14ZK-X1X_gj-u5Jvw7zguoGDXCORkKNzyM6-lds2x4JdAlQQcrfm5k8REqu_f7SfOnlYyqkqHC2jDAttPKO7gf4rRhRtyrn1bzVmwuAGMHA_adSCMJdYnB3SSOP52JVpMPF3DJAngm_g8H6LToMzYYDn-mLdw"
+                src={
+                  user?.image ??
+                  "https://lh3.googleusercontent.com/aida-public/AB6AXuB99jYeepIeZjL5FJnHy5KC2vdZGs0z5-gJlWWBN4--lbjB_HP7X4PhpNXWs1n0TAZLzUZ9ZRqPcpGwxYJIVyu60qpU_i00w9ahIdwIrKrMJJuhQn14ZK-X1X_gj-u5Jvw7zguoGDXCORkKNzyM6-lds2x4JdAlQQcrfm5k8REqu_f7SfOnlYyqkqHC2jDAttPKO7gf4rRhRtyrn1bzVmwuAGMHA_adSCMJdYnB3SSOP52JVpMPF3DJAngm_g8H6LToMzYYDn-mLdw"
+                }
                 width={200}
                 height={200}
                 priority
@@ -83,6 +108,7 @@ const ProfileForm = () => {
               type="email"
               autoComplete="off"
               className="mt-1.5 px-4 py-5 rounded-xl"
+              readOnly
             />
           </div>
 
