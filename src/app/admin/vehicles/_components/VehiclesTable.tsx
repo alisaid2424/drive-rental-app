@@ -1,6 +1,5 @@
-import { Pencil, Trash2, CheckCircle2, Clock3, Wrench } from "lucide-react";
+import { Pencil, CheckCircle2, Clock3, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 import {
   Pagination,
   PaginationContent,
@@ -9,12 +8,15 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { carsall } from "@/constants/data";
 import Image from "next/image";
 import Link from "next/link";
 import { Routes } from "@/constants/enums";
+import { getVehicles } from "@/server/db/vehicle";
+import DeleteVehicleButton from "./DeleteVehicleButton";
 
-export default function VehiclesTable() {
+const VehiclesTable = async () => {
+  const VehiclesAll = await getVehicles();
+
   return (
     <div className="bg-white/60 backdrop-blur-3xl rounded-[2rem] overflow-hidden border border-white/60 shadow-xl shadow-rose-500/5">
       <div className="overflow-x-auto">
@@ -50,7 +52,7 @@ export default function VehiclesTable() {
 
           {/* Body */}
           <tbody className="divide-y divide-border/50">
-            {carsall.map((car, index) => (
+            {VehiclesAll.map((car, index) => (
               <tr key={index} className="hover:bg-accent/50 transition-colors">
                 {/* Image */}
                 <td className="px-8 py-4">
@@ -90,12 +92,12 @@ export default function VehiclesTable() {
 
                 {/* Status */}
                 <td className="px-8 py-4">
-                  {car.status === "Available" ? (
+                  {car.status === "AVAILABLE" ? (
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200">
                       <CheckCircle2 className="w-3 h-3" />
                       Available
                     </span>
-                  ) : car.status === "On Rental" ? (
+                  ) : car.status === "ON_RENTAL" ? (
                     <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-200">
                       <Clock3 className="w-3 h-3" />
                       On Rental
@@ -121,13 +123,10 @@ export default function VehiclesTable() {
                       </Button>
                     </Link>
 
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="w-9 h-9 rounded-full border-slate-200 hover:bg-rose-50 hover:border-rose-200"
-                    >
-                      <Trash2 className="size-4 text-rose-500" />
-                    </Button>
+                    <DeleteVehicleButton
+                      VehicleId={car.id}
+                      isBooked={car.status === "ON_RENTAL"}
+                    />
                   </div>
                 </td>
               </tr>
@@ -139,7 +138,7 @@ export default function VehiclesTable() {
       {/* Footer */}
       <div className="flex items-center justify-between border-t px-6 py-4 bg-background/40">
         <span className="text-sm text-muted-foreground">
-          Showing 1 to {carsall.length} of {carsall.length} vehicles
+          Showing 1 to {VehiclesAll.length} of {VehiclesAll.length} vehicles
         </span>
 
         <Pagination className="w-auto mx-0">
@@ -166,4 +165,6 @@ export default function VehiclesTable() {
       </div>
     </div>
   );
-}
+};
+
+export default VehiclesTable;

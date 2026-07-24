@@ -28,8 +28,10 @@ import {
 import { TextAreaWithLabel } from "@/components/inputs/TextAreaWithLabel";
 import ImageUploadSlot from "./ImageUploadSlot";
 import Link from "next/link";
+import { Vehicle } from "@prisma/client";
+import { vehicleAction } from "@/server/actions/vehicle";
 
-const VehicleForm = ({ vehicle }: { vehicle?: any }) => {
+const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -50,11 +52,11 @@ const VehicleForm = ({ vehicle }: { vehicle?: any }) => {
     type: vehicle?.type ?? "",
     pricePerDay: vehicle?.pricePerDay ?? 0,
     description: vehicle?.description ?? "",
-    seats: vehicle?.specs?.seats ?? 2,
-    transmission: vehicle?.specs?.transmission ?? "",
-    fuel: vehicle?.specs?.fuel ?? "Petrol",
-    power: vehicle?.specs?.power ?? "",
-    topSpeed: vehicle?.specs?.topSpeed ?? "",
+    seats: vehicle?.seats ?? 2,
+    transmission: vehicle?.transmission ?? "",
+    fuel: vehicle?.fuel ?? "Petrol",
+    power: vehicle?.power ?? "",
+    topSpeed: vehicle?.topSpeed ?? "",
     features: vehicle?.features ? vehicle.features.join(", ") : "",
     images: vehicle
       ? [...vehicle.images, null, null, null].slice(0, 3)
@@ -69,6 +71,7 @@ const VehicleForm = ({ vehicle }: { vehicle?: any }) => {
 
   const {
     setValue,
+    setError,
     formState: { errors },
     handleSubmit,
   } = form;
@@ -79,7 +82,29 @@ const VehicleForm = ({ vehicle }: { vehicle?: any }) => {
   }) as (File | string | null)[];
 
   const submitForm = (data: SchemaType) => {
-    console.log(data);
+    startTransition(async () => {
+      try {
+        const res = await vehicleAction(data, isUpdate ? "update" : "create");
+        if (res.status === 200 || res.status === 201) {
+          toast.success(res.message);
+
+          router.push(`${Routes.LISTVEHICLES}?pageNumber=1`);
+          scrollTo(0, 0);
+        } else if (res.status === 400 && res.error) {
+          Object.entries(res.error).forEach(([field, message]) => {
+            setError(field as keyof SchemaType, {
+              type: "server",
+              message: message as string,
+            });
+          });
+          toast.error("Please fix the highlighted fields.");
+        } else {
+          toast.error(res.message);
+        }
+      } catch {
+        toast.error("Unexpected error occurred");
+      }
+    });
   };
 
   return (
@@ -217,9 +242,7 @@ const VehicleForm = ({ vehicle }: { vehicle?: any }) => {
                       img={img}
                       index={index}
                       onChange={(file) =>
-                        setValue(`images.${index}` as Path<SchemaType>, file, {
-                          shouldValidate: true,
-                        })
+                        setValue(`images.${index}` as Path<SchemaType>, file)
                       }
                     />
                   ))}

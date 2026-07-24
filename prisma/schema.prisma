@@ -22,8 +22,8 @@ model User {
   bookings    Booking[]
 }
 
-model Car {
-  id           String    @id @default(uuid())
+model Vehicle {
+  id           String        @id @default(uuid())
   name         String
   brand        String
   type         String
@@ -37,9 +37,9 @@ model Car {
   topSpeed     String
   features     String[]
   bookings     Booking[]
-  status       CarStatus @default(AVAILABLE)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  status       VehicleStatus @default(AVAILABLE)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Booking {
@@ -57,8 +57,8 @@ model Booking {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  carId String
-  car   Car    @relation(fields: [carId], references: [id], onDelete: Cascade)
+  vehicleId String
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -69,7 +69,7 @@ enum UserRole {
   ADMIN
 }
 
-enum CarStatus {
+enum VehicleStatus {
   AVAILABLE
   ON_RENTAL
 }

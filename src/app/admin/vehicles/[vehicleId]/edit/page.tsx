@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import VehicleForm from "../../_components/VehicleForm";
-import { carsall } from "@/constants/data";
+import { getVehicle } from "@/server/db/vehicle";
 
 interface EditVehiclePageProps {
   params: Promise<{ vehicleId: string }>;
@@ -9,7 +9,7 @@ interface EditVehiclePageProps {
 const EditVehiclePage = async ({ params }: EditVehiclePageProps) => {
   const { vehicleId } = await params;
 
-  const vehicle = carsall.find((car) => car.id === vehicleId);
+  const vehicle = await getVehicle(vehicleId);
 
   if (!vehicle) {
     notFound();
