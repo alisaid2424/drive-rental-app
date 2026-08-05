@@ -26,8 +26,9 @@ export async function POST(request: Request) {
         folder: pathName,
         public_id: publicId,
         overwrite: true,
+        invalidate: true,
         transformation: [
-          { width: 400, height: 400, crop: "fill", gravity: "face" },
+          { width: 700, height: 700, crop: "fill", gravity: "face" },
         ],
       },
     );

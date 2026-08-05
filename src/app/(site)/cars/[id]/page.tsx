@@ -1,4 +1,3 @@
-import { carsall } from "@/constants/data";
 import { Pages } from "@/constants/enums";
 import { ArrowRight, CheckCircle2, Star } from "lucide-react";
 import Link from "next/link";
@@ -7,6 +6,8 @@ import { Gauge, Fuel, Cog, Zap } from "lucide-react";
 import CarImagesView from "./_components/CarImagesView";
 import VehicleCard from "@/components/VehicleCard";
 import BookingForm from "./_components/BookingForm";
+import { getVehicle, getVehicles } from "@/server/db/vehicle";
+import { Vehicle } from "@prisma/client";
 
 type PageProps = {
   params: Promise<{
@@ -17,7 +18,8 @@ type PageProps = {
 const CarDetailsPage = async ({ params }: PageProps) => {
   const { id } = await params;
 
-  const car = carsall.find((c) => c.id === id);
+  const allVehicles = await getVehicles();
+  const car = await getVehicle(id);
 
   if (!car) {
     notFound();
@@ -26,22 +28,22 @@ const CarDetailsPage = async ({ params }: PageProps) => {
   const specs = [
     {
       title: "Fuel",
-      value: car.specs.fuel,
+      value: car.fuel,
       icon: Fuel,
     },
     {
       title: "Power",
-      value: car.specs.power,
+      value: car.power,
       icon: Zap,
     },
     {
       title: "Transmission",
-      value: car.specs.transmission,
+      value: car.transmission,
       icon: Cog,
     },
     {
       title: "Top Speed",
-      value: car.specs.topSpeed,
+      value: car.topSpeed,
       icon: Gauge,
     },
   ];
@@ -81,7 +83,7 @@ const CarDetailsPage = async ({ params }: PageProps) => {
                 <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">
                   Premium Features
                 </h2>
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid gap-4">
                   {car.features.map((feature) => (
                     <div
                       key={feature}
@@ -102,38 +104,32 @@ const CarDetailsPage = async ({ params }: PageProps) => {
                 </h3>
                 <ul className="text-sm text-slate-600 space-y-2">
                   <li>
-                    <span className="font-semibold">Seats:</span>{" "}
-                    {car.specs.seats}
+                    <span className="font-semibold">Seats:</span> {car.seats}
                   </li>
                   <li>
                     <span className="font-semibold">Transmission:</span>{" "}
-                    {car.specs.transmission}
+                    {car.transmission}
                   </li>
                   <li>
-                    <span className="font-semibold">Fuel Type:</span>{" "}
-                    {car.specs.fuel}
+                    <span className="font-semibold">Fuel Type:</span> {car.fuel}
                   </li>
                   <li>
-                    <span className="font-semibold">Power:</span>{" "}
-                    {car.specs.power}
+                    <span className="font-semibold">Power:</span> {car.power}
                   </li>
                   <li>
                     <span className="font-semibold">Top Speed:</span>{" "}
-                    {car.specs.topSpeed}
+                    {car.topSpeed}
                   </li>
                   <li>
                     <span className="font-semibold">Bookings:</span>{" "}
-                    {car.bookings}
+                    {car.bookingsCount}
                   </li>
-                  <li>
-                    <span className="font-semibold">Revenue:</span>{" "}
-                    {car.revenue}
-                  </li>
+
                   <li>
                     <span className="font-semibold">Status:</span>{" "}
                     <span
                       className={
-                        car.status === "Available"
+                        car.status === "AVAILABLE"
                           ? "text-green-500"
                           : "text-rose-500"
                       }
@@ -165,7 +161,7 @@ const CarDetailsPage = async ({ params }: PageProps) => {
               </div>
             </div>
 
-            {/* Right Column: Booking Form - Perfect Pixel Match */}
+            {/* Right Column: Booking Form */}
             <BookingForm pricePerDay={car.pricePerDay} />
           </div>
         </div>
@@ -194,7 +190,7 @@ const CarDetailsPage = async ({ params }: PageProps) => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {carsall.slice(0, 3).map((car: any, index: number) => (
+            {allVehicles.slice(0, 3).map((car: Vehicle, index: number) => (
               <VehicleCard key={index} car={car} />
             ))}
           </div>

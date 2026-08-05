@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
 
@@ -25,7 +23,7 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={cn("antialiased", inter.variable, "font-sans")}>
-      <body className="flex flex-col min-h-screen">
+      <body>
         <ClerkProvider
           appearance={{
             elements: {
@@ -36,10 +34,8 @@ export default function RootLayout({ children }: Props) {
             },
           }}
         >
-          <Header />
           <Toaster />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          {children}
         </ClerkProvider>
       </body>
     </html>

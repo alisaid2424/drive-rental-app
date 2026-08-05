@@ -1,11 +1,12 @@
 import LottieHandler from "@/components/LottieHandler";
-import { carsall } from "@/constants/data";
 import { ChevronLeft, ChevronRight, LayoutGrid, List } from "lucide-react";
 import FillterCars from "./_components/FillterCars";
 import { Heading } from "@/components/Heading";
 import VehicleCard from "@/components/VehicleCard";
+import { getVehicles } from "@/server/db/vehicle";
 
-const BrowsePage = () => {
+const BrowsePage = async () => {
+  const allVehicles = await getVehicles();
   return (
     <main className="container-custom py-24 flex flex-col sm:flex-row gap-3">
       {/* Sidebar Filter Area */}
@@ -16,7 +17,7 @@ const BrowsePage = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
           <Heading
             title="Premium Fleet"
-            subtitle={`${carsall.length} exclusive vehicles found for your search`}
+            subtitle={`${allVehicles.length} exclusive vehicles found for your search`}
             align="left"
           />
 
@@ -32,9 +33,9 @@ const BrowsePage = () => {
           </div>
         </div>
 
-        {carsall.length ? (
+        {allVehicles.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {carsall.map((car, index) => (
+            {allVehicles.map((car, index) => (
               <VehicleCard key={index} car={car} />
             ))}
           </div>

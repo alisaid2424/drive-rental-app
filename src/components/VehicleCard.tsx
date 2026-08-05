@@ -2,8 +2,9 @@ import { Fuel, Gauge, Heart, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { Vehicle } from "@prisma/client";
 
-const VehicleCard = ({ car }: { car: any }) => {
+const VehicleCard = ({ car }: { car: Vehicle }) => {
   return (
     <Link
       href={`/cars/${car.id}`}
@@ -15,8 +16,7 @@ const VehicleCard = ({ car }: { car: any }) => {
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
           alt={car.name}
           src={car.images[0]}
-          width={300}
-          height={400}
+          fill
           priority
           loading="eager"
         />
@@ -50,7 +50,7 @@ const VehicleCard = ({ car }: { car: any }) => {
           <div className="flex flex-col items-center p-2.5 rounded-xl bg-slate-50 border border-slate-100 group-hover:bg-rose-50 group-hover:border-rose-100 transition-colors">
             <Users className="w-5 h-5 text-rose-400 mb-1" />
             <span className="text-[10px] font-black text-slate-500 uppercase">
-              {car.specs.seats} Seats
+              {car.seats} Seats
             </span>
           </div>
 
@@ -64,7 +64,7 @@ const VehicleCard = ({ car }: { car: any }) => {
           <div className="flex flex-col items-center p-2.5 rounded-xl bg-slate-50 border border-slate-100 group-hover:bg-rose-50 group-hover:border-rose-100 transition-colors">
             <Fuel className="w-5 h-5 text-rose-400 mb-1" />
             <span className="text-[10px] font-black text-slate-500 uppercase">
-              {car.specs.fuel.split(" ")[0]}
+              {car.fuel}
             </span>
           </div>
         </div>

@@ -41,23 +41,22 @@ export default function CarImagesView({ images, carName }: Props) {
         </div>
 
         {/* Thumbnails */}
-        {images.slice(1).map((img, index) => {
-          const realIndex = index + 1;
-          const isActive = selectedIndex === realIndex;
+        {images.map((img, index) => {
+          const isActive = selectedIndex === index;
 
           return (
             <div
               key={index}
-              onClick={() => setSelectedIndex(realIndex)}
+              onClick={() => setSelectedIndex(index)}
               className={`
                 relative rounded-3xl overflow-hidden cursor-pointer
                 h-22.5 md:h-50
-                ${index === images.slice(1).length - 1 ? "md:col-span-2" : ""}
+                ${index === images.length - 1 ? "md:col-span-2" : ""}
               `}
             >
               <Image
                 src={img}
-                alt={`${carName}-${realIndex}`}
+                alt={`${carName}-${index}`}
                 fill
                 priority
                 loading="eager"
@@ -66,7 +65,7 @@ export default function CarImagesView({ images, carName }: Props) {
                 }`}
               />
 
-              {index === images.slice(1).length - 1 && (
+              {index === images.length - 1 && (
                 <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 px-2 py-1 md:px-4 md:py-2 bg-white/90 rounded-full text-[10px] md:text-xs font-semibold">
                   View All Photos
                 </div>

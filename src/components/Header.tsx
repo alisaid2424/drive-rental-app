@@ -31,8 +31,6 @@ const Header = () => {
 
   const isAdmin = user?.publicMetadata.role === UserRole.ADMIN;
 
-  if (pathname.startsWith(Routes.ADMIN)) return null;
-
   return (
     <header className="fixed top-0 z-50 h-20 w-full border-b border-rose-100/20 bg-white/60 shadow-sm shadow-rose-500/5 backdrop-blur-xl flex items-center">
       <div className="container-custom flex w-full items-center justify-between lg:gap-10">

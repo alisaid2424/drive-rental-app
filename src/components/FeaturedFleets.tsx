@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { Pages } from "@/constants/enums";
 import { ArrowRight } from "lucide-react";
-import { carsall } from "@/constants/data";
 import LottieHandler from "./LottieHandler";
 import VehicleCard from "./VehicleCard";
+import { getTopRentedVehicles } from "@/server/db/vehicle";
 
-const FeaturedFleets = () => {
+const FeaturedFleets = async () => {
+  const topVehicles = await getTopRentedVehicles(4);
+
   return (
     <section className="container-custom py-14">
       {/* Header */}
@@ -31,10 +33,10 @@ const FeaturedFleets = () => {
       </div>
 
       {/* Cards */}
-      {carsall.length ? (
+      {topVehicles.length ? (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-10">
-            {carsall.slice(0, 3).map((car, index) => (
+            {topVehicles.slice(0, 3).map((car, index) => (
               <VehicleCard key={index} car={car} />
             ))}
           </div>

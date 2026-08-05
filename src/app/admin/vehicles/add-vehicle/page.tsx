@@ -1,7 +1,9 @@
 import VehicleForm from "../_components/VehicleForm";
 
 const AddVehicle = () => {
-  return <VehicleForm />;
+  const renderId = crypto.randomUUID();
+
+  return <VehicleForm key={renderId} />;
 };
 
 export default AddVehicle;

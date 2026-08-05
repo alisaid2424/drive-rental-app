@@ -3,6 +3,25 @@
 import prisma from "@/lib/db";
 import { cacheLife, cacheTag } from "next/cache";
 
+export async function getTopRentedVehicles(limit?: number) {
+  cacheTag("get_top_rented_vehicles");
+  cacheLife({ revalidate: 3600 });
+
+  return prisma.vehicle.findMany({
+    where: {
+      bookings: {
+        some: {},
+      },
+    },
+    orderBy: {
+      bookings: {
+        _count: "desc",
+      },
+    },
+    take: limit,
+  });
+}
+
 export async function getVehicles() {
   cacheTag("get_All_vehicles");
   cacheLife({ revalidate: 3600 });
@@ -18,11 +37,24 @@ export async function getVehicle(id: string) {
 
   const vehicle = await prisma.vehicle.findUnique({
     where: { id },
+    include: {
+      bookings: true,
+    },
   });
 
   if (!vehicle) {
     throw new Error("Vehicle not found");
   }
 
-  return vehicle;
+  const bookingsCount = vehicle.bookings.length;
+
+  const revenue = vehicle.bookings.reduce((acc, booking) => {
+    return acc + booking.totalAmount;
+  }, 0);
+
+  return {
+    ...vehicle,
+    bookingsCount,
+    revenue,
+  };
 }
