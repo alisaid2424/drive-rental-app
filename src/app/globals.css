@@ -173,4 +173,8 @@
   .glass-panel {
     @apply bg-white/60 backdrop-blur-3xl rounded-[2rem] border border-white/70 shadow-xl shadow-rose-500/5;
   }
+
+  .filter-title {
+    @apply block mb-3 uppercase text-slate-400 tracking-widest text-[11px] font-black;
+  }
 }

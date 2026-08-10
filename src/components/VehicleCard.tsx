@@ -1,10 +1,22 @@
-import { Fuel, Gauge, Heart, Users } from "lucide-react";
+import { Fuel, Gauge, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Vehicle } from "@prisma/client";
+import { clerkClient } from "@clerk/clerk-sdk-node";
+import { auth } from "@clerk/nextjs/server";
+import AddToFavoriteButton from "./AddToFavoriteButton";
 
-const VehicleCard = ({ car }: { car: Vehicle }) => {
+const VehicleCard = async ({ car }: { car: Vehicle }) => {
+  const { userId } = await auth();
+  let isFavorite = false;
+
+  if (userId) {
+    const user = await clerkClient.users.getUser(userId);
+    const favorites = (user.privateMetadata?.favorites as string[]) || [];
+    isFavorite = favorites.includes(car.id);
+  }
+
   return (
     <Link
       href={`/cars/${car.id}`}
@@ -23,9 +35,8 @@ const VehicleCard = ({ car }: { car: Vehicle }) => {
         <div className="absolute top-4 left-3 bg-white/95 backdrop-blur-md px-3 py-2 rounded-full text-[10px] font-black uppercase tracking-wide text-slate-600 shadow-sm">
           {car.type || "Premium"}
         </div>
-        <button className="absolute top-4 right-3 w-9 h-9 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center text-white hover:bg-rose-500 transition-all active:scale-90 cursor-pointer">
-          <Heart className="w-5 h-5" />
-        </button>
+
+        <AddToFavoriteButton vehicleId={car.id} isFavorite={isFavorite} />
       </div>
       <div className="p-6">
         <div className="flex justify-between items-start mb-6">

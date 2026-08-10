@@ -1,14 +1,17 @@
 import { Heading } from "@/components/Heading";
 import LottieHandler from "@/components/LottieHandler";
 import VehicleCard from "@/components/VehicleCard";
-import { carsall } from "@/constants/data";
+import { Pages } from "@/constants/enums";
+import { getUserFavorites } from "@/server/db/user";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 const FavoritesPage = async () => {
-  /* const { userId } = await auth();
+  const { userId } = await auth();
   if (!userId) redirect(Pages.LOGIN);
-  const showfavorite = await getUserFavorites(userId); */
+  const favorites = await getUserFavorites(userId);
 
-  return carsall.length ? (
+  return favorites.length ? (
     <div className="container-custom flex flex-col items-start pt-20">
       <div className="space-y-2 py-6">
         <span className="inline-flex items-center rounded-full bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
@@ -23,13 +26,13 @@ const FavoritesPage = async () => {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 gap-6 w-full pb-10">
-        {carsall.map((car, index) => (
+        {favorites.map((car, index) => (
           <VehicleCard key={index} car={car} />
         ))}
       </div>
     </div>
   ) : (
-    <div className="element-center text-center min-h-[calc(100vh-60px)]">
+    <div className="element-center text-center h-screen">
       <LottieHandler type="empty" message="No Favorite Available" />
     </div>
   );

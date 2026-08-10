@@ -11,8 +11,10 @@ import {
 import { Form } from "@/components/ui/form";
 import { InputWithLabel } from "@/components/inputs/InputWithLabel";
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 const FormSearchCarRental = () => {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<TSearchCarRentalSchema>({
@@ -25,8 +27,14 @@ const FormSearchCarRental = () => {
   });
 
   const onSubmit = (data: TSearchCarRentalSchema) => {
-    startTransition(async () => {
-      console.log(data);
+    startTransition(() => {
+      const params = new URLSearchParams(
+        Object.entries(data).filter(([, val]) => val),
+      ).toString();
+
+      router.push(`/browse?${params}`);
+
+      form.reset();
     });
   };
 

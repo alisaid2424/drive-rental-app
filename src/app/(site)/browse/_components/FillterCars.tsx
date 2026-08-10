@@ -1,50 +1,88 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CheckboxWithLabel } from "@/components/inputs/CheckboxWithLabel";
 import { CarFront } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
+
+const MIN_PRICE = 650;
+const MAX_PRICE = 1500;
+const carTypes = ["Petrol", "Hybrid", "Electric"];
+const brandOptions = [
+  "Lamborghini",
+  "Ferrari",
+  "Porsche",
+  "Land Rover",
+  "Audi",
+];
+
+const sortOptions = ["Price Low to High", "Price High to Low", "Newest First"];
 
 const FillterCars = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const [openFillters, setOpenFillters] = useState(false);
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [selectedSortOption, setSelectedSortOption] = useState("");
-  const [availableNow, setAvailableNow] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [types, setTypes] = useState<string[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
+  const [sort, setSort] = useState("");
+  const [available, setAvailable] = useState(true);
+  const [price, setPrice] = useState<[number, number]>([MIN_PRICE, MAX_PRICE]);
 
-  const carTypes = ["Luxury", "SUV", "Sedan", "Convertible"];
-  const brands = ["Porsche", "Tesla", "Mercedes-Benz"];
-  const sortOptions = [
-    "Price Low to High",
-    "Price High to Low",
-    "Newest First",
-  ];
+  const updateUrl = (key: string, value?: string) => {
+    const params = new URLSearchParams(searchParams.toString());
 
-  const toggleSelection = (
-    value: string,
-    setter: React.Dispatch<React.SetStateAction<string[]>>,
-  ) => {
-    setter((prev) =>
-      prev.includes(value)
-        ? prev.filter((item) => item !== value)
-        : [...prev, value],
-    );
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+
+    params.set("pageNumber", "1");
+
+    const query = params.toString();
+
+    router.replace(query ? `${pathname}?${query}` : pathname);
   };
 
-  const resetFilters = () => {
-    setSelectedTypes([]);
-    setSelectedBrands([]);
-    setSelectedSortOption("");
-    setAvailableNow(false);
+  // Toggle checkbox
+  const toggleItem = (
+    item: string,
+    currentItems: string[],
+    setItems: React.Dispatch<React.SetStateAction<string[]>>,
+    param: string,
+  ) => {
+    const newItems = currentItems.includes(item)
+      ? currentItems.filter((value) => value !== item)
+      : [...currentItems, item];
 
-    router.push(pathname);
+    setItems(newItems);
+
+    updateUrl(param, newItems.length ? newItems.join(",") : undefined);
+  };
+
+  // Reset
+  const resetFilters = () => {
+    setTypes([]);
+    setBrands([]);
+    setSort("");
+    setAvailable(true);
+    setPrice([MIN_PRICE, MAX_PRICE]);
+
+    const params = new URLSearchParams();
+
+    if (searchParams.has("carQuery"))
+      params.set("carQuery", searchParams.get("carQuery")!);
+    if (searchParams.has("rentalDate"))
+      params.set("rentalDate", searchParams.get("rentalDate")!);
+
+    router.replace(params.toString() ? `${pathname}?${params}` : pathname);
   };
 
   return (
@@ -53,17 +91,17 @@ const FillterCars = () => {
         {/* Header */}
         <div
           className={`flex items-center justify-between mb-6 ${
-            openFillters ? "border-b border-slate-200 pb-4" : ""
+            isOpen ? "border-b border-slate-200 pb-4" : ""
           }`}
         >
           <h3 className="font-bold text-xl text-[#271718]">Filters</h3>
 
           <div className="text-xs cursor-pointer">
             <span
-              onClick={() => setOpenFillters((prev) => !prev)}
+              onClick={() => setIsOpen((prev) => !prev)}
               className="sm:hidden text-primary font-semibold"
             >
-              {openFillters ? "HIDE" : "SHOW"}
+              {isOpen ? "HIDE" : "SHOW"}
             </span>
 
             <span
@@ -77,57 +115,68 @@ const FillterCars = () => {
 
         <div
           className={`${
-            openFillters ? "h-auto" : "h-0 sm:h-auto"
+            isOpen ? "h-auto" : "h-0 sm:h-auto"
           } overflow-hidden transition-all duration-700`}
         >
-          {/* Price Range */}
-          <div className="mb-8">
-            <label className="block mb-4 uppercase text-slate-400 tracking-widest text-[10px] font-black">
-              Price Range (Daily)
-            </label>
-
-            <div className="relative h-2 bg-slate-100 rounded-full mb-4">
-              <div className="absolute h-full w-2/3 left-0 bg-rose-500 rounded-full" />
-              <div className="absolute w-5 h-5 bg-white border-2 border-rose-500 rounded-full -top-1.5 left-0 shadow-md cursor-pointer" />
-              <div className="absolute w-5 h-5 bg-white border-2 border-rose-500 rounded-full -top-1.5 left-[66%] shadow-md cursor-pointer" />
-            </div>
-
-            <div className="flex justify-between text-sm font-bold text-slate-500">
-              <span>$50</span>
-              <span>$1,200+</span>
-            </div>
-          </div>
-
           {/* Car Type */}
           <div className="mb-8">
-            <label className="block mb-4 uppercase text-slate-400 tracking-widest text-[10px] font-black">
-              Car Type
-            </label>
+            <label className="filter-title">Car Type</label>
 
             <div className="space-y-3">
               {carTypes.map((type) => (
                 <CheckboxWithLabel
                   key={type}
                   fieldTitle={type}
-                  checked={selectedTypes.includes(type)}
+                  checked={types.includes(type)}
                   onCheckedChange={() =>
-                    toggleSelection(type, setSelectedTypes)
+                    toggleItem(type, types, setTypes, "type")
                   }
                 />
               ))}
             </div>
           </div>
 
+          {/* Price Range Slider */}
+          <div className="mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <label className="filter-title">Price Range (Daily)</label>
+
+              <span className="text-end text-xs font-bold text-rose-500">
+                ${price[0]} - ${price[1]}
+                {price[1] === MAX_PRICE && "+"}
+              </span>
+            </div>
+
+            <Slider
+              value={price}
+              min={MIN_PRICE}
+              max={MAX_PRICE}
+              step={50}
+              onValueChange={(value) => setPrice(value as [number, number])}
+              onValueCommit={(value) => {
+                updateUrl("minPrice", value[0].toString());
+
+                updateUrl("maxPrice", value[1].toString());
+              }}
+            />
+
+            <div className="flex justify-between mt-3 text-xs font-bold text-slate-400">
+              <span>${MIN_PRICE}</span>
+              <span>${MAX_PRICE}+</span>
+            </div>
+          </div>
+
           {/* Sort */}
           <div className="mb-8">
-            <label className="block mb-4 uppercase text-slate-400 tracking-widest text-[10px] font-black">
-              Sort By
-            </label>
+            <label className="filter-title">Sort By</label>
 
             <RadioGroup
-              value={selectedSortOption}
-              onValueChange={setSelectedSortOption}
-              className="flex flex-col gap-4"
+              value={sort}
+              onValueChange={(value) => {
+                setSort(value);
+                updateUrl("sort", value);
+              }}
+              className="space-y-4"
             >
               {sortOptions.map((option, idx) => (
                 <div key={idx} className="flex items-center space-x-3">
@@ -152,26 +201,27 @@ const FillterCars = () => {
               </span>
 
               <Switch
-                checked={availableNow}
-                onCheckedChange={(checked) => setAvailableNow(checked)}
+                checked={available}
+                onCheckedChange={(checked) => {
+                  setAvailable(checked);
+                  updateUrl("available", checked ? "true" : undefined);
+                }}
               />
             </div>
           </div>
 
           {/* Brands */}
           <div>
-            <label className="block mb-4 uppercase text-slate-400 tracking-widest text-[10px] font-black">
-              Preferred Brands
-            </label>
+            <label className="filter-title">Preferred Brands</label>
 
             <div className="space-y-3">
-              {brands.map((brand) => (
+              {brandOptions.map((brand) => (
                 <CheckboxWithLabel
                   key={brand}
                   fieldTitle={brand}
-                  checked={selectedBrands.includes(brand)}
+                  checked={brands.includes(brand)}
                   onCheckedChange={() =>
-                    toggleSelection(brand, setSelectedBrands)
+                    toggleItem(brand, brands, setBrands, "brand")
                   }
                 />
               ))}
@@ -184,11 +234,9 @@ const FillterCars = () => {
       <div className="bg-primary rounded-2xl p-8 text-white relative overflow-hidden mt-6">
         <div className="relative z-10">
           <h4 className="text-lg font-bold mb-2">Summer Drive Special</h4>
-
           <p className="text-xs text-rose-100 mb-6 leading-relaxed">
             Enjoy 15% off on all luxury SUVs this month.
           </p>
-
           <Button className="bg-white text-rose-600 font-bold text-sm hover:bg-rose-50 transition-colors uppercase tracking-wider">
             Claim Offer
           </Button>

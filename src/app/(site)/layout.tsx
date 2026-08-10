@@ -7,9 +7,9 @@ type Props = {
 
 export default function SiteLayout({ children }: Props) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
       <Header />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 min-h-[calc(100vh-80px)]">{children}</main>
       <Footer />
     </div>
   );

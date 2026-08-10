@@ -154,3 +154,44 @@ export async function updateProfile(data: TProfileFormSchema) {
     };
   }
 }
+
+export async function updateFavoriteUser(vehicleId: string, userId: string) {
+  try {
+    const user = await clerkClient.users.getUser(userId);
+
+    let favorites = (user.privateMetadata?.favorites as string[]) ?? [];
+
+    if (!Array.isArray(favorites)) {
+      favorites = [];
+    }
+
+    // Toggle logic
+    if (!favorites.includes(vehicleId)) {
+      favorites.push(vehicleId);
+    } else {
+      favorites = favorites.filter((id) => id !== vehicleId);
+    }
+
+    await clerkClient.users.updateUserMetadata(userId, {
+      privateMetadata: {
+        ...user.privateMetadata,
+        favorites,
+      },
+    });
+
+    revalidatePath(Routes.ROOT);
+    revalidatePath(Pages.BROWSE);
+    revalidatePath(Pages.FAVORITE);
+
+    return {
+      status: 200,
+      message: "Favorite vehicles updated",
+      favorites,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: error instanceof Error ? error.message : "internal server error",
+    };
+  }
+}

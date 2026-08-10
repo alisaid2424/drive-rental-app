@@ -1,14 +1,48 @@
 import LottieHandler from "@/components/LottieHandler";
-import { ChevronLeft, ChevronRight, LayoutGrid, List } from "lucide-react";
+import { LayoutGrid, List } from "lucide-react";
 import FillterCars from "./_components/FillterCars";
 import { Heading } from "@/components/Heading";
 import VehicleCard from "@/components/VehicleCard";
-import { getVehicles } from "@/server/db/vehicle";
+import { getVehiclesFilters } from "@/server/db/vehicle";
+import PaginationBrowse from "./_components/PaginationBrowse";
 
-const BrowsePage = async () => {
-  const allVehicles = await getVehicles();
+type SearchParams = {
+  type?: string;
+  brand?: string;
+  sort?: string;
+  available?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  carQuery?: string;
+  rentalDate?: string;
+  pageNumber: string;
+};
+
+const BrowsePage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) => {
+  const params = await searchParams;
+
+  const page = Number(params.pageNumber) || 1;
+
+  const { vehicles, totalPages } = await getVehiclesFilters(
+    {
+      carQuery: params.carQuery,
+      rentalDate: params.rentalDate,
+      types: params.type?.split(","),
+      brands: params.brand?.split(","),
+      sort: params.sort,
+      availableNow: params.available === "true",
+      minPrice: Number(params.minPrice) || undefined,
+      maxPrice: Number(params.maxPrice) || undefined,
+    },
+    page,
+  );
+
   return (
-    <main className="container-custom py-24 flex flex-col sm:flex-row gap-3">
+    <main className="container-custom py-24 flex flex-col sm:flex-row gap-5">
       {/* Sidebar Filter Area */}
       <FillterCars />
 
@@ -17,7 +51,7 @@ const BrowsePage = async () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
           <Heading
             title="Premium Fleet"
-            subtitle={`${allVehicles.length} exclusive vehicles found for your search`}
+            subtitle={`${vehicles.length} exclusive vehicles found for your search`}
             align="left"
           />
 
@@ -33,9 +67,9 @@ const BrowsePage = async () => {
           </div>
         </div>
 
-        {allVehicles.length ? (
+        {vehicles.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {allVehicles.map((car, index) => (
+            {vehicles.map((car, index) => (
               <VehicleCard key={index} car={car} />
             ))}
           </div>
@@ -45,28 +79,11 @@ const BrowsePage = async () => {
           </div>
         )}
 
-        {/* Pagination */}
-        <div className="mt-16 flex justify-center items-center gap-2">
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 hover:bg-rose-50 hover:border-rose-200 transition-colors text-slate-400">
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-rose-500 text-white font-black text-sm">
-            1
-          </button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 hover:bg-rose-50 transition-colors font-bold text-sm text-slate-600">
-            2
-          </button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 hover:bg-rose-50 transition-colors font-bold text-sm text-slate-600">
-            3
-          </button>
-          <span className="px-2 text-slate-300 text-sm font-bold">...</span>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 hover:bg-rose-50 transition-colors font-bold text-sm text-slate-600">
-            8
-          </button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 hover:bg-rose-50 hover:border-rose-200 transition-colors text-slate-400">
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
+        <PaginationBrowse
+          currentPage={page}
+          totalPages={totalPages}
+          searchParams={params}
+        />
       </section>
     </main>
   );

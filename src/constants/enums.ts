@@ -11,7 +11,7 @@ export enum Routes {
 export enum Pages {
   LOGIN = "/sign-in",
   Register = "/signup",
-  BROWSE = "/browse",
+  BROWSE = "/browse?pageNumber=1",
   FAVORITE = "/favorites",
   ABOUT = "/about",
   CONTACT = "/contact",
@@ -19,9 +19,9 @@ export enum Pages {
   LOCATIONS = "/locations",
 }
 
-export const VEHICLES_PER_PAGE = 5;
-export const ORDERS_PER_PAGE = 5;
-export const BOOKINGS_PER_PAGE = 5;
+export const VEHICLES_PER_PAGE = 6;
+export const ORDERS_PER_PAGE = 6;
+export const BOOKINGS_PER_PAGE = 6;
 
 const PRODUCTION_DOMAIN = "";
 
