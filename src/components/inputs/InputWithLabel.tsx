@@ -21,6 +21,7 @@ type Props<S> = {
   showCurrency?: boolean;
   showLocationIcon?: boolean;
   showCarIcon?: boolean;
+  showCreditcardIcon?: boolean;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export function InputWithLabel<S>({
@@ -30,6 +31,7 @@ export function InputWithLabel<S>({
   showCurrency,
   showLocationIcon,
   showCarIcon,
+  showCreditcardIcon,
   ...props
 }: Props<S>) {
   const form = useFormContext();
@@ -59,6 +61,14 @@ export function InputWithLabel<S>({
 
               {showLocationIcon && (
                 <MapPin className="absolute right-4 top-1/2 -translate-y-1/2 size-4.5 text-primary pointer-events-none" />
+              )}
+
+              {showCreditcardIcon && (
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-6 bg-slate-900 rounded flex items-center justify-center shadow-sm pointer-events-none">
+                  <span className="text-[7px] text-white font-black italic">
+                    VISA
+                  </span>
+                </div>
               )}
 
               {showCarIcon && (

@@ -14,7 +14,7 @@ import { InputWithLabel } from "@/components/inputs/InputWithLabel";
 import { User } from "@prisma/client";
 import { updateProfile } from "@/server/actions/user";
 import { toast } from "sonner";
-import { useEffect } from "react";
+import { useDispatchFormStatus } from "@/hooks/useFormStatus";
 
 type Props = {
   user: User | null;
@@ -35,13 +35,7 @@ const ProfileForm = ({ user }: Props) => {
 
   const { isSubmitting } = form.formState;
 
-  useEffect(() => {
-    const event = new CustomEvent("form-submitting-state", {
-      detail: { loading: isSubmitting },
-    });
-
-    dispatchEvent(event);
-  }, [isSubmitting]);
+  useDispatchFormStatus("form-profile-submitting", isSubmitting);
 
   const onSubmit = async (data: TProfileFormSchema) => {
     const result = await updateProfile(data);

@@ -1,22 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useFormStatusListener } from "@/hooks/useFormStatus";
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useState } from "react";
 
 const ButtonActions = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    const handleloading = (e: CustomEvent) => setIsSubmitting(e.detail.loading);
-    addEventListener("form-submitting-state", handleloading as EventListener);
-
-    return () =>
-      removeEventListener(
-        "form-submitting-state",
-        handleloading as EventListener,
-      );
-  }, []);
+  const isSubmitting = useFormStatusListener("form-profile-submitting");
 
   return (
     <div className="flex gap-4 w-full md:max-w-xs shrink-0">
