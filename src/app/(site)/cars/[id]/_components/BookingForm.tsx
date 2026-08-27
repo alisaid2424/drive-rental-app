@@ -6,15 +6,28 @@ import { InputWithLabel } from "@/components/inputs/InputWithLabel";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { ShieldCheck, KeyRound, Sparkles, LoaderCircle } from "lucide-react";
-import { useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { CarBookingSchema, CarBookingSchemaType } from "@/zod-schemas/booking";
 import { calculateBookingSummary } from "@/lib/calculateBookingSummary";
+import { useRouter } from "next/navigation";
+import { useClerk, useUser } from "@clerk/nextjs";
+import { toast } from "sonner";
+import {
+  checkVehicleAvailability,
+  createBooking,
+} from "@/server/actions/booking";
+import { Pages } from "@/constants/enums";
 
 type Props = {
+  vehicleId: string;
   pricePerDay: number;
 };
 
-const BookingForm = ({ pricePerDay }: Props) => {
+const BookingForm = ({ vehicleId, pricePerDay }: Props) => {
+  const router = useRouter();
+  const { user } = useUser();
+  const { openSignIn } = useClerk();
+  const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<CarBookingSchemaType>({
@@ -36,6 +49,11 @@ const BookingForm = ({ pricePerDay }: Props) => {
     name: "returnDateTime",
   });
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsAvailable(null);
+  }, [pickupDateTime, returnDateTime]);
+
   const { rentalDays, serviceFee, total } = calculateBookingSummary({
     pickupDateTime,
     returnDateTime,
@@ -43,8 +61,44 @@ const BookingForm = ({ pricePerDay }: Props) => {
   });
 
   const onSubmit = (data: CarBookingSchemaType) => {
+    if (!user) {
+      toast.warning("Please sign in to book a vehicle");
+      openSignIn();
+      return;
+    }
+
     startTransition(async () => {
-      console.log(data);
+      if (!isAvailable) {
+        const result = await checkVehicleAvailability({
+          vehicleId,
+          pickupDateTime,
+          returnDateTime,
+        });
+
+        if (!result.isAvailable) {
+          setIsAvailable(false);
+
+          toast.warning("The vehicle is not available for the selected dates.");
+
+          return;
+        }
+
+        setIsAvailable(true);
+
+        toast.success("Vehicle is available!");
+
+        return;
+      }
+
+      const res = await createBooking(vehicleId, data);
+
+      if (res.success) {
+        toast.success(res.message);
+
+        router.push(`${Pages.CHECKOUT}?bookingId=${res.data?.id}`);
+      } else {
+        toast.error(res.message);
+      }
     });
   };
 
@@ -52,7 +106,7 @@ const BookingForm = ({ pricePerDay }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="rounded-3xl border border-slate-200 bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+        className="min-w-sm xl:min-w-md rounded-3xl border border-slate-200 bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
       >
         {/* Header */}
         <div className="flex items-end justify-between flex-wrap gap-3">
@@ -149,16 +203,29 @@ const BookingForm = ({ pricePerDay }: Props) => {
         </div>
 
         {/* CTA */}
-        <Button disabled={isPending} type="submit" className="mt-5 w-full py-6">
+        <Button
+          disabled={isPending}
+          type="submit"
+          className="mt-5 w-full py-6 gap-2"
+        >
           {isPending ? (
             <>
               <LoaderCircle className="h-5 w-5 animate-spin" />
-              Loading...
+              <span>
+                {isAvailable === true
+                  ? "Booking..."
+                  : "Checking Availability..."}
+              </span>
+            </>
+          ) : isAvailable === true ? (
+            <>
+              <KeyRound className="h-5 w-5" />
+              <span>Book Now</span>
             </>
           ) : (
             <>
               <KeyRound className="h-5 w-5" />
-              Book Now
+              <span>Check Availability</span>
             </>
           )}
         </Button>

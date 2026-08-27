@@ -4,9 +4,11 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X, CheckCircle2, Download, Gauge, Settings, Fuel } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { formatBookingDateTime } from "@/lib/formatBookingDateTime";
+import { BookingWithUserVehicle } from "@/types/booking";
 
 interface BookingDetailsDialogProps {
-  booking: any;
+  booking: BookingWithUserVehicle;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -72,8 +74,8 @@ export function BookingDetailsDialog({
 
                 <div className="group">
                   <Image
-                    src={booking.car.image}
-                    alt={booking.car.name}
+                    src={booking.vehicle.images[0]}
+                    alt={booking.vehicle.name}
                     width={200}
                     height={200}
                     className="object-cover w-full h-52 rounded-md group-hover:scale-[1.03] transition-transform duration-700"
@@ -82,10 +84,10 @@ export function BookingDetailsDialog({
                   <div className="flex justify-between items-end mt-7 relative z-10">
                     <div>
                       <h2 className="text-xl font-black uppercase text-slate-900 leading-none">
-                        {booking.car.name}
+                        {booking.vehicle.name}
                       </h2>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2">
-                        {booking.car.type}
+                        {booking.vehicle.type}
                       </p>
                     </div>
 
@@ -104,7 +106,7 @@ export function BookingDetailsDialog({
                       Seats
                     </span>
                     <span className="text-xs font-black text-slate-900 uppercase">
-                      {booking.car.specs?.seats}
+                      {booking.vehicle.seats}
                     </span>
                   </div>
 
@@ -114,7 +116,7 @@ export function BookingDetailsDialog({
                       Transmission
                     </span>
                     <span className="text-[9px] font-black text-slate-900 uppercase">
-                      {booking.car.specs?.transmission}
+                      {booking.vehicle.transmission}
                     </span>
                   </div>
 
@@ -124,7 +126,7 @@ export function BookingDetailsDialog({
                       Fuel
                     </span>
                     <span className="text-xs font-black text-slate-900 uppercase">
-                      {booking.car.specs?.fuel}
+                      {booking.vehicle.fuel}
                     </span>
                   </div>
                 </div>
@@ -148,22 +150,20 @@ export function BookingDetailsDialog({
                       <div className="flex flex-col justify-between h-24">
                         <div>
                           <p className="text-base font-black uppercase text-slate-900">
-                            {booking.pickup.date} • {booking.pickup.time}
+                            {formatBookingDateTime(booking.pickupDate)}
                           </p>
                           <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                            {booking.pickup.location}
+                            {booking.pickupLocation}
                           </p>
                         </div>
 
                         <div className="mt-4">
                           <p className="text-base font-black uppercase text-slate-900">
-                            {booking.dropoff?.date || booking.pickup.date} •{" "}
-                            {booking.dropoff?.time || booking.pickup.time}
+                            {formatBookingDateTime(booking.dropoffDate)}
                           </p>
 
                           <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
-                            {booking.dropoff?.location ||
-                              booking.pickup.location}
+                            {booking.dropoffLocation}
                           </p>
                         </div>
                       </div>
@@ -174,7 +174,7 @@ export function BookingDetailsDialog({
                     <div className="flex justify-between items-center text-xs font-bold text-slate-500">
                       <span>Base Rental Rate</span>
                       <span className="text-slate-900 font-black">
-                        ${booking.car.pricePerDay}.00
+                        ${booking.vehicle.pricePerDay}.00
                       </span>
                     </div>
 

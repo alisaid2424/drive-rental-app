@@ -35,7 +35,7 @@ export async function getVehicles() {
 }
 
 export async function getVehicle(id: string) {
-  cacheTag("get_vehicle");
+  cacheTag(`get_vehicle-${id}`);
   cacheLife({ revalidate: 3600 });
 
   const vehicle = await prisma.vehicle.findUnique({
@@ -49,17 +49,7 @@ export async function getVehicle(id: string) {
     throw new Error("Vehicle not found");
   }
 
-  const bookingsCount = vehicle.bookings.length;
-
-  const revenue = vehicle.bookings.reduce((acc, booking) => {
-    return acc + booking.totalAmount;
-  }, 0);
-
-  return {
-    ...vehicle,
-    bookingsCount,
-    revenue,
-  };
+  return vehicle;
 }
 
 export async function getVehiclesFilters(

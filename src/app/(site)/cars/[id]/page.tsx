@@ -75,9 +75,9 @@ const CarDetailsPage = async ({ params }: PageProps) => {
 
         {/* Product Content */}
         <div className="py-14 ">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="flex flex-col md:flex-row gap-5 lg:gap-8">
             {/* Left Column: Specs & Features */}
-            <div className="lg:col-span-2 space-y-10">
+            <div className="flex-1 space-y-10">
               {/* Features List */}
               <div className="space-y-8">
                 <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">
@@ -102,7 +102,7 @@ const CarDetailsPage = async ({ params }: PageProps) => {
                 <h3 className="text-xl font-bold text-slate-900 uppercase tracking-tight">
                   Vehicle Details
                 </h3>
-                <ul className="text-sm text-slate-600 space-y-2">
+                <ul className="text-sm text-slate-600 space-y-4">
                   <li>
                     <span className="font-semibold">Seats:</span> {car.seats}
                   </li>
@@ -120,28 +120,11 @@ const CarDetailsPage = async ({ params }: PageProps) => {
                     <span className="font-semibold">Top Speed:</span>{" "}
                     {car.topSpeed}
                   </li>
-                  <li>
-                    <span className="font-semibold">Bookings:</span>{" "}
-                    {car.bookingsCount}
-                  </li>
-
-                  <li>
-                    <span className="font-semibold">Status:</span>{" "}
-                    <span
-                      className={
-                        car.status === "AVAILABLE"
-                          ? "text-green-500"
-                          : "text-rose-500"
-                      }
-                    >
-                      {car.status}
-                    </span>
-                  </li>
                 </ul>
               </div>
 
               {/* Specs Bento Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {specs.map((item) => {
                   const Icon = item.icon;
 
@@ -162,7 +145,7 @@ const CarDetailsPage = async ({ params }: PageProps) => {
             </div>
 
             {/* Right Column: Booking Form */}
-            <BookingForm pricePerDay={car.pricePerDay} />
+            <BookingForm vehicleId={car.id} pricePerDay={car.pricePerDay} />
           </div>
         </div>
       </div>

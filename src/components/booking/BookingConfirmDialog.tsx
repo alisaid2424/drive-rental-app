@@ -3,9 +3,13 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X, CreditCard, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { BookingWithUserVehicle } from "@/types/booking";
+import { Pages } from "@/constants/enums";
 
 interface BookingConfirmDialogProps {
-  booking: any;
+  booking: BookingWithUserVehicle;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -15,6 +19,7 @@ export function BookingConfirmDialog({
   isOpen,
   onClose,
 }: BookingConfirmDialogProps) {
+  const router = useRouter();
   if (!booking) return null;
 
   return (
@@ -67,25 +72,26 @@ export function BookingConfirmDialog({
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center text-xs sm:text-sm font-bold text-slate-500 px-2">
-                  <span>Vehicle: {booking.car.name}</span>
+                  <span>Vehicle: {booking.vehicle.name}</span>
                   <span className="text-slate-900">
-                    ${booking.car.pricePerDay} / Day
+                    ${booking.vehicle.pricePerDay} / Day
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-xs sm:text-sm font-bold text-slate-500 px-2">
                   <span>Service Fees</span>
                   <span className="text-slate-900">
-                    ${booking.car.pricePerDay * 0.05} / Day
+                    ${booking.vehicle.pricePerDay * 0.05} / Day
                   </span>
                 </div>
               </div>
 
               <Button
                 onClick={() => {
-                  onClose();
-                  alert(
+                  toast.success(
                     "Payment processed successfully! Your booking is now confirmed.",
                   );
+                  router.push(`${Pages.CHECKOUT}?bookingId=${booking.id}`);
+                  onClose();
                 }}
                 className="w-full h-14 bg-primary text-white rounded-md sm:rounded-2xl font-black "
               >

@@ -13,11 +13,14 @@ import {
   modifyBookingSchema,
   TModifyBookingSchema,
 } from "@/zod-schemas/booking";
-import { formatToDateTimeLocal } from "@/lib/formatToDateTimeLocal";
 import { calculateBookingSummary } from "@/lib/calculateBookingSummary";
+import { formatToDatetimeLocal } from "@/lib/formatToDateTimeLocal";
+import { updateBooking } from "@/server/actions/booking";
+import { toast } from "sonner";
+import { BookingWithUserVehicle } from "@/types/booking";
 
 interface BookingModifyDialogProps {
-  booking: any;
+  booking: BookingWithUserVehicle;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -33,16 +36,10 @@ export function BookingModifyDialog({
     resolver: zodResolver(modifyBookingSchema),
 
     defaultValues: {
-      pickupLocation: booking.pickup.location,
-      returnLocation: booking.dropoff.location,
-      pickupDateTime: formatToDateTimeLocal(
-        booking.pickup?.date,
-        booking.pickup?.time,
-      ),
-      returnDateTime: formatToDateTimeLocal(
-        booking.dropoff?.date || booking.pickup?.date,
-        booking.dropoff?.time || booking.pickup?.time,
-      ),
+      pickupLocation: booking.pickupLocation,
+      returnLocation: booking.dropoffLocation,
+      pickupDateTime: formatToDatetimeLocal(booking.pickupDate),
+      returnDateTime: formatToDatetimeLocal(booking.dropoffDate),
     },
   });
 
@@ -55,7 +52,7 @@ export function BookingModifyDialog({
     name: "returnDateTime",
   });
 
-  const pricePerDay = booking.car?.pricePerDay ?? 0;
+  const pricePerDay = booking.vehicle?.pricePerDay ?? 0;
   const { rentalDays, total } = calculateBookingSummary({
     pickupDateTime,
     returnDateTime,
@@ -64,11 +61,14 @@ export function BookingModifyDialog({
 
   const onSubmit = (data: TModifyBookingSchema) => {
     startTransition(async () => {
-      console.log(data);
+      const res = await updateBooking(booking.id, data);
 
-      // api call
-
-      onClose();
+      if (res.success) {
+        toast.success(res.message);
+        onClose();
+      } else {
+        toast.error(res.message);
+      }
     });
   };
 
@@ -102,7 +102,7 @@ export function BookingModifyDialog({
             <div className="flex items-center gap-6 p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
               <div className="w-24 h-16 rounded-xl overflow-hidden shadow-sm bg-white">
                 <Image
-                  src={booking.car.image}
+                  src={booking.vehicle.images[0]}
                   className="w-full h-full object-cover"
                   alt="Car"
                   width={200}
@@ -111,16 +111,16 @@ export function BookingModifyDialog({
               </div>
               <div>
                 <h4 className="text-base sm:text-xl font-black uppercase text-slate-900">
-                  {booking.car.name}
+                  {booking.vehicle.name}
                 </h4>
                 <div className="flex items-center gap-4 text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">
                   <span className="flex items-center gap-2">
                     <Users size={12} className="text-rose-500" />{" "}
-                    {booking.car.specs?.seats} Seats
+                    {booking.vehicle.seats} Seats
                   </span>
                   <span className="flex items-center gap-2">
                     <Settings size={12} className="text-rose-500" />{" "}
-                    {booking.car.specs?.transmission}
+                    {booking.vehicle.transmission}
                   </span>
                 </div>
               </div>
@@ -156,10 +156,7 @@ export function BookingModifyDialog({
                     fieldTitle="Pick-up Date & Time"
                     nameInSchema="pickupDateTime"
                     type="datetime-local"
-                    min={formatToDateTimeLocal(
-                      booking.pickup?.date,
-                      booking.pickup?.time,
-                    )}
+                    min={formatToDatetimeLocal(booking.pickupDate)}
                     className="h-12 rounded-xl mt-2"
                   />
 

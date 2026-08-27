@@ -4,11 +4,13 @@ import { useState } from "react";
 import { BookingDetailsDialog } from "./BookingDetailsDialog";
 import { BookingModifyDialog } from "./BookingModifyDialog";
 import { BookingConfirmDialog } from "./BookingConfirmDialog";
-import { Info, Edit3, CreditCard, Trash2 } from "lucide-react";
+import { Info, Edit3, CreditCard } from "lucide-react";
 import { Button } from "../ui/button";
+import DeleteBookingButton from "./DeleteBookingButton";
+import { BookingWithUserVehicle } from "@/types/booking";
 
 interface BookingActionsProps {
-  booking: any;
+  booking: BookingWithUserVehicle;
   isPaid?: boolean;
 }
 
@@ -19,16 +21,6 @@ export function BookingActions({
   const [activeDialog, setActiveDialog] = useState<
     "details" | "modify" | "confirm" | null
   >(null);
-
-  const handleDelete = () => {
-    if (
-      confirm(
-        "Are you sure you want to cancel this booking? This action cannot be undone.",
-      )
-    ) {
-      alert("Booking canceled successfully.");
-    }
-  };
 
   return (
     <div className="flex flex-wrap items-center md:justify-end gap-3">
@@ -66,16 +58,7 @@ export function BookingActions({
             <Edit3 className="size-4" />
           </Button>
 
-          <Button
-            variant="secondary"
-            size="icon"
-            onClick={handleDelete}
-            className="bg-rose-50 text-rose-600 border border-rose-200
-            hover:bg-rose-100 hover:border-rose-500"
-            title="Delete Booking"
-          >
-            <Trash2 className="size-4" />
-          </Button>
+          <DeleteBookingButton bookingId={booking.id} />
         </div>
       )}
 

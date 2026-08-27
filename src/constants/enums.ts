@@ -17,6 +17,7 @@ export enum Pages {
   CONTACT = "/contact",
   MYBOOKINGS = "/my-bookings",
   LOCATIONS = "/locations",
+  CHECKOUT = "/checkout",
 }
 
 export const VEHICLES_PER_PAGE = 6;

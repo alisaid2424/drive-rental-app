@@ -46,10 +46,8 @@ model Booking {
   id              String        @id @default(uuid())
   status          BookingStatus @default(PENDING)
   pickupDate      DateTime
-  pickupTime      String
   pickupLocation  String
   dropoffDate     DateTime
-  dropoffTime     String
   dropoffLocation String
   totalAmount     Float
   paymentStatus   String        @default("Unpaid")
