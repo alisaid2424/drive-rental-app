@@ -9,14 +9,15 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserBookings } from "@/server/db/user";
 import { formatBookingDateTime } from "@/lib/formatBookingDateTime";
 import { BookingWithUserVehicle } from "@/types/booking";
+import LoadMoreContainer from "@/components/LoadMoreList";
 
 const MyBookingsPage = async () => {
   const { userId: clerkUserId } = await auth();
-  const bookings = clerkUserId ? await getUserBookings(clerkUserId) : [];
+  const allbookings = clerkUserId ? await getUserBookings(clerkUserId) : [];
 
   return (
-    <section className="container-custom py-28">
-      {bookings.length ? (
+    <section className="container-custom py-24">
+      {allbookings.length ? (
         <div className="max-w-5xl">
           <div className="mb-4 flex flex-col items-center md:items-start">
             <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary mb-3">
@@ -31,8 +32,8 @@ const MyBookingsPage = async () => {
             />
           </div>
 
-          <div className="flex flex-col gap-5">
-            {bookings.map((booking: BookingWithUserVehicle) => {
+          <LoadMoreContainer step={3} className="flex flex-col gap-5">
+            {allbookings.map((booking: BookingWithUserVehicle) => {
               const isPaid = booking.paymentStatus === "Paid";
 
               return (
@@ -41,7 +42,6 @@ const MyBookingsPage = async () => {
                   className="group flex flex-col md:flex-row justify-between bg-white/60 backdrop-blur-3xl border border-white/60 rounded-[2.5rem] p-4 shadow-xl shadow-rose-500/5 hover:-translate-y-1 transition-all duration-500 overflow-hidden"
                 >
                   <div className="flex flex-col md:flex-row gap-6">
-                    {/* Vehicle Image */}
                     <div className="relative md:w-60 h-40 rounded-[2rem] overflow-hidden shrink-0 border border-white/40 shadow-sm">
                       <Image
                         src={booking.vehicle.images[0]}
@@ -65,7 +65,6 @@ const MyBookingsPage = async () => {
                       </div>
                     </div>
 
-                    {/* Vehicle & Trip Info */}
                     <div className="flex flex-col justify-center py-2">
                       <div className="mb-4">
                         <h3 className="text-xl font-black text-slate-900 uppercase tracking-wide mb-1">
@@ -96,7 +95,6 @@ const MyBookingsPage = async () => {
                     </div>
                   </div>
 
-                  {/* Amount & Actions */}
                   <div className="flex flex-col md:items-end justify-between p-4 md:text-right">
                     <div className="mb-4">
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">
@@ -114,7 +112,7 @@ const MyBookingsPage = async () => {
                 </div>
               );
             })}
-          </div>
+          </LoadMoreContainer>
         </div>
       ) : (
         <div className="max-w-lg mx-auto text-center my-10 py-20 bg-white/60 backdrop-blur-3xl rounded-lg sm:rounded-4xl border-2 border-dashed border-rose-200 flex flex-col items-center">
