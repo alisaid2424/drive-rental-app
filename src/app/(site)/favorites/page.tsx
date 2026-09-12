@@ -2,14 +2,14 @@ import { Heading } from "@/components/Heading";
 import LottieHandler from "@/components/LottieHandler";
 import VehicleCard from "@/components/VehicleCard";
 import { Pages } from "@/constants/enums";
-import { getUserFavorites } from "@/server/db/user";
+import { getFavoritesUser } from "@/server/db/user";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 const FavoritesPage = async () => {
   const { userId } = await auth();
   if (!userId) redirect(Pages.LOGIN);
-  const favorites = await getUserFavorites(userId);
+  const favorites = await getFavoritesUser(userId);
 
   return favorites.length ? (
     <div className="container-custom flex flex-col items-start pt-20">

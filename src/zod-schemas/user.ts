@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const profileFormSchema = z.object({
+export const UpdateUserSchema = z.object({
   fullName: z
     .string()
     .min(3, "Full name must be at least 3 characters.")
@@ -15,9 +15,11 @@ export const profileFormSchema = z.object({
     .optional()
     .or(z.literal("")),
 
+  role: z.enum(["USER", "ADMIN"]),
+
   phone: z.string().optional().or(z.literal("")),
 
   timezone: z.string(),
 });
 
-export type TProfileFormSchema = z.infer<typeof profileFormSchema>;
+export type UpdateUserType = z.infer<typeof UpdateUserSchema>;

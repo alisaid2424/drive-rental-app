@@ -2,13 +2,11 @@ import { CheckCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const fleetHealthData = [
-  { label: "Luxury Sedans", value: 85 },
-  { label: "Convertibles", value: 62 },
-  { label: "SUVs", value: 48 },
-];
+type FleetHealthCardProps = {
+  fleetHealthData: { label: string; value: number }[];
+};
 
-export function FleetHealthCard() {
+export function FleetHealthCard({ fleetHealthData }: FleetHealthCardProps) {
   return (
     <Card className="glass-panel">
       <CardHeader>

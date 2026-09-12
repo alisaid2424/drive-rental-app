@@ -147,3 +147,77 @@ export async function getVehiclesFilters(
     totalPages: Math.ceil(total / VEHICLES_PER_PAGE),
   };
 }
+
+export async function getVehiclesForAdmin({
+  searchText = "",
+  pageNumber = 1,
+}: {
+  searchText?: string;
+  pageNumber?: number;
+}) {
+  cacheTag(`vehicles-search-${searchText}-page-${pageNumber}`);
+  cacheLife({ revalidate: 3600 });
+
+  const whereClause = searchText
+    ? {
+        OR: [
+          {
+            name: {
+              contains: searchText,
+              mode: "insensitive" as const,
+            },
+          },
+          {
+            brand: {
+              contains: searchText,
+              mode: "insensitive" as const,
+            },
+          },
+          {
+            type: {
+              contains: searchText,
+              mode: "insensitive" as const,
+            },
+          },
+        ],
+      }
+    : {};
+
+  const now = new Date();
+
+  const [vehicles, totalCount] = await Promise.all([
+    prisma.vehicle.findMany({
+      where: whereClause,
+      include: {
+        bookings: {
+          where: {
+            status: {
+              not: "CANCELLED",
+            },
+            pickupDate: {
+              lte: now,
+            },
+            dropoffDate: {
+              gte: now,
+            },
+          },
+        },
+      },
+      skip: VEHICLES_PER_PAGE * (pageNumber - 1),
+      take: VEHICLES_PER_PAGE,
+      orderBy: {
+        createdAt: "desc",
+      },
+    }),
+
+    prisma.vehicle.count({
+      where: whereClause,
+    }),
+  ]);
+
+  return {
+    vehicles,
+    totalCount,
+    totalPages: Math.ceil(totalCount / VEHICLES_PER_PAGE),
+  };
+}

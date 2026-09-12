@@ -1,7 +1,12 @@
 "use client";
 
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { X, CheckCircle2, Download, Gauge, Settings, Fuel } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { CheckCircle2, Download, Gauge, Settings, Fuel } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { formatBookingDateTime } from "@/lib/formatBookingDateTime";
@@ -22,30 +27,16 @@ export function BookingDetailsDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent
-        showCloseButton={false}
-        className="max-w-[90%] sm:max-w-md md:max-w-4xl bg-white border-none rounded-4xl shadow-2xl overflow-hidden max-h-[90vh] p-0"
-      >
+      <DialogContent className="max-w-[90%] sm:max-w-md md:max-w-4xl bg-white border-none rounded-4xl shadow-2xl overflow-hidden max-h-[90vh] p-0">
         <div className="flex flex-col h-[90vh]">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-slate-50 bg-[#fafafa] shrink-0">
-            <div>
-              <DialogTitle className="text-2xl font-black tracking-tighter capitalize text-slate-900">
-                Reservation Dossier
-              </DialogTitle>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-2">
-                Ref: #{booking.id}
-              </p>
-            </div>
-
-            <Button
-              size="icon-lg"
-              onClick={onClose}
-              className="group bg-white shadow-sm text-slate-400 hover:text-rose-500 rounded-xl hover:bg-white transition-all"
-            >
-              <X className="size-5 group-hover:rotate-180 transition duration-300" />
-            </Button>
-          </div>
+          <DialogHeader className="p-6 border-b border-slate-50 bg-[#fafafa] shrink-0">
+            <DialogTitle className="text-2xl font-black tracking-tighter capitalize text-slate-900">
+              Reservation Dossier
+            </DialogTitle>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mt-2">
+              Ref: #{booking.id.slice(0, 6)}
+            </p>
+          </DialogHeader>
 
           {/* Scroll Area */}
           <div className="flex-1 overflow-y-auto">

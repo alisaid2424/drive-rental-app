@@ -1,23 +1,19 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { User } from "@prisma/client";
+import { User, UserRole } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { Pages, Routes } from "@/constants/enums";
 import { auth } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/clerk-sdk-node";
-import { TProfileFormSchema } from "@/zod-schemas/settings/accountSettingsSchema";
+import { UpdateUserType } from "@/zod-schemas/user";
+import { revalidateUserPaths } from "@/lib/revalidateUserPaths";
 
-export async function createUser(data: User) {
+export async function createUserInDB(data: User) {
   try {
     const user = await prisma.user.create({ data });
 
-    revalidatePath(Routes.ADMIN);
-    revalidatePath(Routes.SETTINGS);
-    revalidatePath(Routes.CUSTOMERS);
-    revalidatePath(Routes.LISTVEHICLES);
-    revalidatePath(Pages.MYBOOKINGS);
-    revalidatePath(Routes.ROOT);
+    revalidateUserPaths();
 
     return { user };
   } catch (error) {
@@ -29,7 +25,7 @@ export async function createUser(data: User) {
   }
 }
 
-export async function UpdateUser(clerkUserId: string, data: Partial<User>) {
+export async function UpdateUserInDB(clerkUserId: string, data: Partial<User>) {
   try {
     if (!clerkUserId) {
       return { error: "Missing user ID" };
@@ -44,12 +40,7 @@ export async function UpdateUser(clerkUserId: string, data: Partial<User>) {
       data,
     });
 
-    revalidatePath(Routes.ADMIN);
-    revalidatePath(Routes.SETTINGS);
-    revalidatePath(Routes.CUSTOMERS);
-    revalidatePath(Routes.LISTVEHICLES);
-    revalidatePath(Pages.MYBOOKINGS);
-    revalidatePath(Routes.ROOT);
+    revalidateUserPaths();
 
     return { user };
   } catch (error) {
@@ -61,7 +52,7 @@ export async function UpdateUser(clerkUserId: string, data: Partial<User>) {
   }
 }
 
-export async function deleteUserFromDB(userId: string) {
+export async function deleteUserInDB(userId: string) {
   try {
     await prisma.user.delete({
       where: {
@@ -69,12 +60,7 @@ export async function deleteUserFromDB(userId: string) {
       },
     });
 
-    revalidatePath(Routes.ADMIN);
-    revalidatePath(Routes.SETTINGS);
-    revalidatePath(Routes.CUSTOMERS);
-    revalidatePath(Routes.LISTVEHICLES);
-    revalidatePath(Pages.MYBOOKINGS);
-    revalidatePath(Routes.ROOT);
+    revalidateUserPaths();
 
     return {
       success: true,
@@ -89,7 +75,58 @@ export async function deleteUserFromDB(userId: string) {
   }
 }
 
-export async function updateProfile(data: TProfileFormSchema) {
+export async function deleteUserInDBAndClerk(clerkUserId: string) {
+  try {
+    //Delete from Clerk
+    try {
+      await clerkClient.users.deleteUser(clerkUserId);
+    } catch (clerkError) {
+      return {
+        success: false,
+        message:
+          clerkError instanceof Error
+            ? clerkError.message
+            : `Clerk deletion failed with unknown error:${clerkError}`,
+      };
+    }
+
+    // Delete from DB
+    const existingUser = await prisma.user.findUnique({
+      where: { clerkUserId },
+    });
+
+    if (!existingUser) {
+      return {
+        success: false,
+        message: "User already deleted from DB.",
+      };
+    }
+
+    await prisma.user.delete({
+      where: { clerkUserId },
+    });
+
+    revalidateUserPaths();
+
+    return {
+      success: true,
+      message: "User deleted successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Internal Server Error",
+    };
+  }
+}
+
+export async function updateUserInDBAndClerk({
+  targetUserId,
+  data,
+}: {
+  targetUserId: string;
+  data: UpdateUserType;
+}) {
   try {
     const { userId } = await auth();
 
@@ -100,9 +137,32 @@ export async function updateProfile(data: TProfileFormSchema) {
       };
     }
 
-    const existingUser = await prisma.user.findUnique({
+    const currentUser = await prisma.user.findUnique({
       where: {
         clerkUserId: userId,
+      },
+    });
+
+    if (!currentUser) {
+      return {
+        success: false,
+        message: "Unauthorized",
+      };
+    }
+
+    const isAdmin = currentUser.role === UserRole.ADMIN;
+    const isSelf = currentUser.clerkUserId === targetUserId;
+
+    if (!isAdmin && !isSelf) {
+      return {
+        success: false,
+        message: "Forbidden",
+      };
+    }
+
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        clerkUserId: targetUserId,
       },
     });
 
@@ -118,29 +178,33 @@ export async function updateProfile(data: TProfileFormSchema) {
     const firstName = parts[0] ?? "";
     const lastName = parts.slice(1).join(" ");
 
-    await clerkClient.users.updateUser(userId, {
+    const newRole = isAdmin ? data.role : existingUser.role;
+
+    await clerkClient.users.updateUser(targetUserId, {
       firstName,
       lastName,
     });
 
+    await clerkClient.users.updateUserMetadata(targetUserId, {
+      publicMetadata: {
+        role: newRole,
+      },
+    });
+
     const user = await prisma.user.update({
       where: {
-        clerkUserId: userId,
+        clerkUserId: targetUserId,
       },
       data: {
         name: data.fullName,
         phone: data.phone,
         bio: data.bio,
         timezone: data.timezone,
+        role: newRole,
       },
     });
 
-    revalidatePath(Routes.ADMIN);
-    revalidatePath(Routes.SETTINGS);
-    revalidatePath(Routes.CUSTOMERS);
-    revalidatePath(Routes.LISTVEHICLES);
-    revalidatePath(Pages.MYBOOKINGS);
-    revalidatePath(Routes.ROOT);
+    revalidateUserPaths();
 
     return {
       success: true,

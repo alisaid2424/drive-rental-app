@@ -6,14 +6,14 @@ import { CalendarDays, MapPin, Settings, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/Heading";
 import { auth } from "@clerk/nextjs/server";
-import { getUserBookings } from "@/server/db/user";
+import { getBookingsUser } from "@/server/db/user";
 import { formatBookingDateTime } from "@/lib/formatBookingDateTime";
 import { BookingWithUserVehicle } from "@/types/booking";
 import LoadMoreContainer from "@/components/LoadMoreList";
 
 const MyBookingsPage = async () => {
   const { userId: clerkUserId } = await auth();
-  const allbookings = clerkUserId ? await getUserBookings(clerkUserId) : [];
+  const allbookings = clerkUserId ? await getBookingsUser(clerkUserId) : [];
 
   return (
     <section className="container-custom py-24">

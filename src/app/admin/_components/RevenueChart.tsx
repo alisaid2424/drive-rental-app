@@ -15,16 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { ChartConfig } from "@/components/ui/chart";
-
-const revenueData = [
-  { day: "Mon", revenue: 4000 },
-  { day: "Tue", revenue: 6200 },
-  { day: "Wed", revenue: 5500 },
-  { day: "Thu", revenue: 8500 },
-  { day: "Fri", revenue: 4500 },
-  { day: "Sat", revenue: 9500 },
-  { day: "Sun", revenue: 6500 },
-];
+import { useRouter, useSearchParams } from "next/navigation";
 
 const chartConfig = {
   revenue: {
@@ -33,23 +24,41 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function RevenueChart() {
+type RevenueChartProps = {
+  revenueData: {
+    day: string;
+    revenue: number;
+  }[];
+  days: number;
+};
+
+export function RevenueChart({ revenueData, days }: RevenueChartProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handleDaysChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set("days", value);
+
+    router.push(`?${params.toString()}`);
+  };
+
   return (
-    <Card className="glass-panel lg:col-span-2 py-8">
+    <Card className="glass-panel lg:col-span-2 pt-8">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-sm sm:text-lg font-black text-slate-900 capitalize tracking-tight">
           Revenue Performance
         </CardTitle>
 
-        <Select defaultValue="30">
+        <Select value={days.toString()} onValueChange={handleDaysChange}>
           <SelectTrigger className="w-45">
             <SelectValue />
           </SelectTrigger>
 
           <SelectContent>
-            <SelectItem value="30">Last 30 Days</SelectItem>
-
-            <SelectItem value="180">Last 6 Months</SelectItem>
+            <SelectItem value="7">Last 7 Days</SelectItem>
+            <SelectItem value="10">Last 10 Days</SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>

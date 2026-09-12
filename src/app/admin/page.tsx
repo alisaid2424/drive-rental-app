@@ -1,26 +1,34 @@
-import { allbookings, carsall } from "@/constants/data";
 import { Calendar, DollarSign, Car, ArrowRight } from "lucide-react";
-import { RevenueChart } from "./_components/revenue-chart";
 import { FleetHealthCard } from "./_components/FleetHealthCard";
 import Link from "next/link";
 import { Heading } from "@/components/Heading";
 import TableBookings from "./_components/TableBookings";
+import { getDashboardData } from "@/server/db/dashboardData";
+import { RevenueChart } from "./_components/RevenueChart";
+import { Routes } from "@/constants/enums";
 
-export default async function AdminDashboardPage() {
-  const totalBookings = allbookings.length;
-  const totalRevenue = allbookings.reduce(
-    (sum: number, b: any) => sum + (b.totalAmount || 0),
-    0
-  );
-  const activeFleetCount = carsall.filter(
-    (c: any) => c.status === "On Rental"
-  ).length;
-  const totalFleetCount = carsall.length;
+const AdminDashboardPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ days?: string }>;
+}) => {
+  const { days } = await searchParams;
+  const selectedDays = days === "10" ? 10 : 7;
+
+  const {
+    totalBookings,
+    totalRevenue,
+    activeFleetCount,
+    totalFleetCount,
+    recentBookings,
+    revenueData,
+    fleetHealthData,
+  } = await getDashboardData(selectedDays);
 
   const analyticsCards = [
     {
       title: "Total Bookings",
-      value: totalBookings.toLocaleString(),
+      value: totalBookings,
       icon: Calendar,
       trend: "+12.5%",
       trendColor: "text-emerald-500",
@@ -28,7 +36,7 @@ export default async function AdminDashboardPage() {
     },
     {
       title: "Total Revenue",
-      value: `$${totalRevenue.toLocaleString()}`,
+      value: `$${totalRevenue}`,
       icon: DollarSign,
       trend: "+8.2%",
       trendColor: "text-emerald-500",
@@ -100,27 +108,29 @@ export default async function AdminDashboardPage() {
       {/* Charts Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Chart */}
-        <RevenueChart />
+        <RevenueChart revenueData={revenueData} days={selectedDays} />
 
         {/* Fleet Health */}
-        <FleetHealthCard />
+        <FleetHealthCard fleetHealthData={fleetHealthData} />
       </div>
 
       {/* Recent Bookings Table */}
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 pb-5">
         <div className="px-4 pt-2 flex justify-between items-center bg-transparent">
           <h2 className="text-xl font-bold tracking-tight">Recent Bookings</h2>
 
           <Link
-            href="#"
+            href={Routes.LISTBOOKINGS}
             className="group flex items-center gap-2 font-semibold text-primary"
           >
             View All
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
-        <TableBookings />
+        <TableBookings bookings={recentBookings} showPagenation={false} />
       </div>
     </div>
   );
-}
+};
+
+export default AdminDashboardPage;

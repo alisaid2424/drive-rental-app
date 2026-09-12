@@ -1,7 +1,12 @@
 "use client";
 
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { X, CreditCard, ShieldCheck, CheckCircle2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { CreditCard, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -24,28 +29,16 @@ export function BookingConfirmDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent
-        showCloseButton={false}
-        className="max-w-[90%] sm:max-w-md md:max-w-xl bg-white border-none rounded-[40px] shadow-2xl overflow-hidden"
-      >
+      <DialogContent className="max-w-[90%] sm:max-w-md md:max-w-xl bg-white border-none rounded-4xl shadow-2xl overflow-hidden">
         <div className="p-7">
-          <div className="flex justify-between items-start mb-8">
-            <div>
-              <DialogTitle className="text-xl sm:text-2xl font-black text-slate-900 capitalize">
-                Finalize Payment
-              </DialogTitle>
-              <p className="text-[8px] sm:text-[10px] font-black text-slate-400 tracking-[0.2em] mt-2">
-                Secure your premium reservation
-              </p>
-            </div>
-            <Button
-              size="icon-lg"
-              onClick={onClose}
-              className="group bg-slate-50 hover:bg-slate-100 hover:text-rose-500 rounded-xl transition-all text-slate-400"
-            >
-              <X className="size-5 group-hover:rotate-180 transition duration-300" />
-            </Button>
-          </div>
+          <DialogHeader className="mb-8">
+            <DialogTitle className="text-xl sm:text-2xl font-black text-slate-900 capitalize">
+              Finalize Payment
+            </DialogTitle>
+            <p className="text-[8px] sm:text-[10px] font-black text-slate-400 tracking-[0.2em]">
+              Secure your premium reservation
+            </p>
+          </DialogHeader>
 
           <div className="space-y-8">
             <div className="p-4 sm:p-5 bg-slate-50 rounded-md sm:rounded-[2.5rem] border border-slate-100 flex items-center justify-between">

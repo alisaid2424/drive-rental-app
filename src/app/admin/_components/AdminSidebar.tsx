@@ -21,6 +21,7 @@ const adminItems = [
     href: Routes.ADMIN,
     icon: LayoutDashboard,
   },
+  { name: "Users", href: Routes.USERS, icon: Users },
   {
     name: "Vehicles",
     href: Routes.LISTVEHICLES,
@@ -30,11 +31,6 @@ const adminItems = [
     name: "Bookings",
     href: Routes.LISTBOOKINGS,
     icon: CalendarDays,
-  },
-  {
-    name: "Customers",
-    href: Routes.CUSTOMERS,
-    icon: Users,
   },
   {
     name: "Settings",

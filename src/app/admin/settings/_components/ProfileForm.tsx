@@ -5,46 +5,78 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Camera } from "lucide-react";
 import Image from "next/image";
-import {
-  profileFormSchema,
-  TProfileFormSchema,
-} from "@/zod-schemas/settings/accountSettingsSchema";
-import { TextAreaWithLabel } from "@/components/inputs/TextAreaWithLabel";
-import { InputWithLabel } from "@/components/inputs/InputWithLabel";
 import { User } from "@prisma/client";
-import { updateProfile } from "@/server/actions/user";
 import { toast } from "sonner";
 import { useDispatchFormStatus } from "@/hooks/useFormStatus";
+import { UserInputFields } from "../../_components/UserInputFields";
+import { UpdateUserSchema, UpdateUserType } from "@/zod-schemas/user";
+import { updateUserInDBAndClerk } from "@/server/actions/user";
+import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { useEffect, useRef } from "react";
 
 type Props = {
   user: User | null;
 };
 
 const ProfileForm = ({ user }: Props) => {
-  const form = useForm<TProfileFormSchema>({
-    resolver: zodResolver(profileFormSchema),
-    defaultValues: {
-      fullName: user?.name ?? "",
-      email: user?.email ?? "",
-      bio: user?.bio ?? "",
-      phone: user?.phone ?? "",
-      timezone:
-        user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
-    },
+  const router = useRouter();
+  const { user: clerkUser } = useUser();
+
+  const getFormValues = (u: User | null): UpdateUserType => ({
+    fullName: u?.name ?? "",
+    email: u?.email ?? "",
+    bio: u?.bio ?? "",
+    role: u?.role ?? "USER",
+    phone: u?.phone ?? "",
+    timezone: u?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
   });
+
+  const form = useForm<UpdateUserType>({
+    resolver: zodResolver(UpdateUserSchema),
+    defaultValues: getFormValues(user),
+  });
+
+  useEffect(() => {
+    if (user) {
+      if (user) {
+        form.reset(getFormValues(user));
+      }
+    }
+  }, [user, form]);
+
+  const clerkLastUpdated = clerkUser?.updatedAt?.getTime();
+  const initialClerkTime = useRef(clerkLastUpdated);
+
+  useEffect(() => {
+    if (clerkLastUpdated && clerkLastUpdated !== initialClerkTime.current) {
+      initialClerkTime.current = clerkLastUpdated;
+      router.refresh();
+    }
+  }, [clerkLastUpdated, router]);
 
   const { isSubmitting } = form.formState;
 
   useDispatchFormStatus("form-profile-submitting", isSubmitting);
 
-  const onSubmit = async (data: TProfileFormSchema) => {
-    const result = await updateProfile(data);
+  const onSubmit = async (data: UpdateUserType) => {
+    if (!user?.clerkUserId) {
+      toast.error("User not found");
+      return;
+    }
+
+    const result = await updateUserInDBAndClerk({
+      targetUserId: user?.clerkUserId,
+      data,
+    });
 
     if (!result.success) {
       toast.error(result.message);
       return;
     }
 
+    await clerkUser?.reload();
+    router.refresh();
     toast.success(result.message);
   };
 
@@ -85,55 +117,7 @@ const ProfileForm = ({ user }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
-          <div className="col-span-2 md:col-span-1">
-            <InputWithLabel<TProfileFormSchema>
-              fieldTitle="Full Name"
-              nameInSchema="fullName"
-              autoComplete="off"
-              className="mt-1.5 px-4 py-5 rounded-xl"
-            />
-          </div>
-
-          <div className="col-span-2 md:col-span-1">
-            <InputWithLabel<TProfileFormSchema>
-              fieldTitle="Email Address"
-              nameInSchema="email"
-              type="email"
-              autoComplete="off"
-              className="mt-1.5 px-4 py-5 rounded-xl"
-              readOnly
-            />
-          </div>
-
-          <div className="col-span-2">
-            <TextAreaWithLabel<TProfileFormSchema>
-              fieldTitle="Bio / Professional Summary"
-              nameInSchema="bio"
-              rows={4}
-              className="mt-1.5 min-h-25 p-4 resize-none rounded-xl"
-            />
-          </div>
-
-          <div className="col-span-2 md:col-span-1">
-            <InputWithLabel<TProfileFormSchema>
-              fieldTitle="Phone Number"
-              nameInSchema="phone"
-              type="tel"
-              autoComplete="off"
-              className="mt-1.5 px-4 py-5 rounded-xl"
-            />
-          </div>
-
-          <div className="col-span-2 md:col-span-1">
-            <InputWithLabel<TProfileFormSchema>
-              fieldTitle="Timezone"
-              nameInSchema="timezone"
-              readOnly
-              className="mt-1.5 px-4 py-5 rounded-xl"
-            />
-          </div>
-        </div>
+        <UserInputFields />
       </form>
     </Form>
   );

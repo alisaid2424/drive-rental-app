@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
 
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
+  },
+
   allowedDevOrigins: ["roseately-patternless-jensen.ngrok-free.dev"],
 };
 

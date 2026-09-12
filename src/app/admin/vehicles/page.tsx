@@ -2,14 +2,28 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Heading } from "@/components/Heading";
 import { Plus } from "lucide-react";
-import { FleetStats } from "./_components/FleetStats";
 import VehiclesTable from "./_components/VehiclesTable";
 import { Routes } from "@/constants/enums";
+import SearchInput from "../_components/SearchInput";
+import { getVehiclesForAdmin } from "@/server/db/vehicle";
 
-export default async function VehiclesListPage() {
+interface VehiclesPageProps {
+  searchParams: Promise<{
+    searchText?: string;
+    pageNumber?: string;
+  }>;
+}
+
+const VehiclesListPage = async ({ searchParams }: VehiclesPageProps) => {
+  const { searchText = "", pageNumber = "1" } = await searchParams;
+
+  const data = await getVehiclesForAdmin({
+    searchText,
+    pageNumber: Number(pageNumber),
+  });
+
   return (
     <div className="space-y-8 mb-7">
-      {/* Page Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <Heading
           title="Vehicle Fleet"
@@ -25,11 +39,11 @@ export default async function VehiclesListPage() {
         </Link>
       </div>
 
-      {/* Dashboard Analytics */}
-      <FleetStats />
+      <SearchInput placeholder="Search by name vehicle or Type or brand..." />
 
-      {/* Vehicles Table Section */}
-      <VehiclesTable />
+      <VehiclesTable {...data} />
     </div>
   );
-}
+};
+
+export default VehiclesListPage;

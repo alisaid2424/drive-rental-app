@@ -4,8 +4,8 @@ export enum Routes {
   LISTVEHICLES = "/admin/vehicles",
   LISTBOOKINGS = "/admin/bookings",
   ADDVEHICLE = "/admin/vehicles/add-vehicle",
-  CUSTOMERS = "/admin/customers",
   SETTINGS = "/admin/settings",
+  USERS = "/admin/users",
 }
 
 export enum Pages {
@@ -20,6 +20,7 @@ export enum Pages {
   CHECKOUT = "/checkout",
 }
 
+export const USERS_PER_PAGE = 6;
 export const VEHICLES_PER_PAGE = 6;
 export const ORDERS_PER_PAGE = 6;
 export const BOOKINGS_PER_PAGE = 6;

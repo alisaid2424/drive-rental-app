@@ -3,9 +3,9 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { clerkClient } from "@clerk/clerk-sdk-node";
 import {
-  createUser,
-  deleteUserFromDB,
-  UpdateUser,
+  createUserInDB,
+  deleteUserInDB,
+  UpdateUserInDB,
 } from "@/server/actions/user";
 import { User, UserRole } from "@prisma/client";
 import prisma from "@/lib/db";
@@ -29,7 +29,7 @@ interface ClerkUserData {
   profile_image_url?: string;
   external_accounts?: ExternalAccount[];
   public_metadata?: {
-    role?: string;
+    role?: UserRole;
   };
 }
 
@@ -46,14 +46,12 @@ function extractUserData(data: ClerkUserData): Partial<User> {
     externalAccount.image_url ??
     null;
 
-  const result: Partial<User> = {
+  return {
     clerkUserId: data.id,
     email,
     name: `${firstName} ${lastName}`.trim(),
     image,
   };
-
-  return result;
 }
 
 export async function POST(req: Request) {
@@ -117,7 +115,7 @@ export async function POST(req: Request) {
           return new Response("User email is required", { status: 400 });
         }
 
-        await createUser(userData as User);
+        await createUserInDB(userData as User);
 
         await clerkClient.users.updateUserMetadata(eventData.id, {
           publicMetadata: {
@@ -137,22 +135,17 @@ export async function POST(req: Request) {
 
         const userData = extractUserData(eventData);
 
-        await UpdateUser(eventData.id, userData);
+        await UpdateUserInDB(eventData.id, userData);
 
         const { id, public_metadata } = eventData;
         const role = public_metadata?.role as UserRole;
 
         if (role) {
-          await prisma.user.updateMany({
+          await prisma.user.update({
             where: { clerkUserId: id },
             data: { role },
           });
-
-          console.log(`Role updated to ${role} for user ${id}`);
-        } else {
-          console.log("No role found in public_metadata.");
         }
-
         break;
       }
 
@@ -163,7 +156,7 @@ export async function POST(req: Request) {
           });
         }
 
-        await deleteUserFromDB(eventData.id);
+        await deleteUserInDB(eventData.id);
 
         break;
       }
@@ -174,7 +167,9 @@ export async function POST(req: Request) {
 
     return new Response("Webhook processed", { status: 200 });
   } catch (err) {
-    console.error("Error processing webhook:", err);
-    return new Response("Internal server error", { status: 500 });
+    return new Response(
+      err instanceof Error ? err.message : "Internal server error",
+      { status: 500 },
+    );
   }
 }
