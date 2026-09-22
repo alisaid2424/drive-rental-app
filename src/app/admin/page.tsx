@@ -2,10 +2,11 @@ import { Calendar, DollarSign, Car, ArrowRight } from "lucide-react";
 import { FleetHealthCard } from "./_components/FleetHealthCard";
 import Link from "next/link";
 import { Heading } from "@/components/Heading";
-import TableBookings from "./_components/TableBookings";
 import { getDashboardData } from "@/server/db/dashboardData";
 import { RevenueChart } from "./_components/RevenueChart";
 import { Routes } from "@/constants/enums";
+import { bookingColumns } from "./_components/BookingColumns";
+import { AdminTable } from "@/components/AdminTable";
 
 const AdminDashboardPage = async ({
   searchParams,
@@ -127,7 +128,13 @@ const AdminDashboardPage = async ({
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
-        <TableBookings bookings={recentBookings} showPagenation={false} />
+
+        <AdminTable
+          data={recentBookings}
+          columns={bookingColumns}
+          showPagination={false}
+          tableType="Bookings"
+        />
       </div>
     </div>
   );

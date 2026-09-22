@@ -1,7 +1,9 @@
 import { Heading } from "@/components/Heading";
-import TableBookings from "../_components/TableBookings";
 import SearchInput from "../_components/SearchInput";
 import { getBookings } from "@/server/db/booking";
+import { AdminTable } from "@/components/AdminTable";
+import { bookingColumns } from "../_components/BookingColumns";
+import { BOOKINGS_PER_PAGE } from "@/constants/enums";
 
 interface BookingsPageProps {
   searchParams: Promise<{
@@ -26,9 +28,20 @@ const BookingsPage = async ({ searchParams }: BookingsPageProps) => {
         align="left"
       />
 
-      <SearchInput placeholder="Search by name user or vehicle..." />
+      <SearchInput
+        key={searchText}
+        placeholder="Search by name user or vehicle..."
+      />
 
-      <TableBookings {...data} />
+      <AdminTable
+        data={data.bookings}
+        columns={bookingColumns}
+        totalPages={data.totalPages}
+        totalCount={data.totalCount}
+        currentPage={Number(pageNumber)}
+        itemsPerPage={BOOKINGS_PER_PAGE}
+        tableType="Bookings"
+      />
     </div>
   );
 };

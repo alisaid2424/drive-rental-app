@@ -9,19 +9,20 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { TableType } from "@/components/AdminTable";
 
 type PaginationAdminProps = {
   totalPages?: number;
   totalCount?: number;
   currentCount: number;
-  itemName: string;
+  tableType: TableType;
 };
 
 const PaginationAdmin = ({
   totalPages = 1,
   totalCount = 0,
   currentCount,
-  itemName,
+  tableType,
 }: PaginationAdminProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -42,7 +43,7 @@ const PaginationAdmin = ({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t px-6 py-4 bg-background/40">
       <span className="text-sm text-muted-foreground">
-        Showing {currentCount} of {totalCount || currentCount} {itemName}
+        Showing {currentCount} of {totalCount || currentCount} {tableType}
       </span>
 
       <Pagination className="w-auto mx-0">

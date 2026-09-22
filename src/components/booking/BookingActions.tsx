@@ -6,17 +6,20 @@ import { BookingModifyDialog } from "./BookingModifyDialog";
 import { BookingConfirmDialog } from "./BookingConfirmDialog";
 import { Info, Edit3, CreditCard } from "lucide-react";
 import { Button } from "../ui/button";
-import DeleteBookingButton from "./DeleteBookingButton";
 import { BookingWithUserVehicle } from "@/types/booking";
+import { DeleteButton } from "../DeleteButton";
+import { deleteBooking } from "@/server/actions/booking";
 
 interface BookingActionsProps {
   booking: BookingWithUserVehicle;
-  isPaid?: boolean;
+  isPaid: boolean;
+  currentItemsCount?: number;
 }
 
 export function BookingActions({
   booking,
   isPaid = false,
+  currentItemsCount,
 }: BookingActionsProps) {
   const [activeDialog, setActiveDialog] = useState<
     "details" | "modify" | "confirm" | null
@@ -58,7 +61,16 @@ export function BookingActions({
             <Edit3 className="size-4" />
           </Button>
 
-          <DeleteBookingButton bookingId={booking.id} />
+          <DeleteButton
+            id={booking.id}
+            onDelete={deleteBooking}
+            title="Delete Booking?"
+            description="Are you sure you want to delete this booking?"
+            currentItemsCount={currentItemsCount}
+            variant="secondary"
+            size="icon"
+            className="w-10 h-10 rounded-md bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 hover:border-rose-500 transition-colors"
+          />
         </div>
       )}
 

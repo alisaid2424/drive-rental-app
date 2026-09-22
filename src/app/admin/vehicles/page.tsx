@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Heading } from "@/components/Heading";
 import { Plus } from "lucide-react";
-import VehiclesTable from "./_components/VehiclesTable";
-import { Routes } from "@/constants/enums";
+import { Routes, VEHICLES_PER_PAGE } from "@/constants/enums";
 import SearchInput from "../_components/SearchInput";
 import { getVehiclesForAdmin } from "@/server/db/vehicle";
+import { vehicleColumns } from "./_components/VehicleColumns";
+import { AdminTable } from "@/components/AdminTable";
 
 interface VehiclesPageProps {
   searchParams: Promise<{
@@ -39,9 +40,20 @@ const VehiclesListPage = async ({ searchParams }: VehiclesPageProps) => {
         </Link>
       </div>
 
-      <SearchInput placeholder="Search by name vehicle or Type or brand..." />
+      <SearchInput
+        key={searchText}
+        placeholder="Search by name vehicle or Type or brand..."
+      />
 
-      <VehiclesTable {...data} />
+      <AdminTable
+        data={data.vehicles}
+        columns={vehicleColumns}
+        totalPages={data.totalPages}
+        totalCount={data.totalCount}
+        currentPage={Number(pageNumber)}
+        itemsPerPage={VEHICLES_PER_PAGE}
+        tableType="Vehicles"
+      />
     </div>
   );
 };

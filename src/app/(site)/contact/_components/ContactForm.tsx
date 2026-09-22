@@ -9,11 +9,8 @@ import { Button } from "@/components/ui/button";
 import { InputWithLabel } from "@/components/inputs/InputWithLabel";
 import { SelectWithLabel } from "@/components/inputs/SelectWithLabel";
 import { TextAreaWithLabel } from "@/components/inputs/TextAreaWithLabel";
-import {
-  contactFormSchema,
-  TContactFormSchema,
-} from "@/zod-schemas/contact/contactForm";
 import { fleets, services } from "./dataContact";
+import { contactFormSchema, TContactFormSchema } from "@/zod-schemas/contact";
 
 export default function ContactForm() {
   const [isPending, startTransition] = useTransition();
