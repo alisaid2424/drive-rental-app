@@ -4,7 +4,14 @@ import VehicleCard from "@/components/VehicleCard";
 import { Pages } from "@/constants/enums";
 import { getFavoritesUser } from "@/server/db/user";
 import { auth } from "@clerk/nextjs/server";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Your Favorites",
+  description:
+    "View and manage your saved favorite luxury vehicles for quick booking.",
+};
 
 const FavoritesPage = async () => {
   const { userId } = await auth();

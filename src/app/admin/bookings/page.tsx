@@ -4,6 +4,14 @@ import { getBookings } from "@/server/db/booking";
 import { AdminTable } from "@/components/AdminTable";
 import { bookingColumns } from "../_components/BookingColumns";
 import { BOOKINGS_PER_PAGE } from "@/constants/enums";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Bookings & Reservations",
+  description:
+    "Monitor and control all luxury fleet reservations and logistics timelines in real-time.",
+  robots: { index: false, follow: false },
+};
 
 interface BookingsPageProps {
   searchParams: Promise<{

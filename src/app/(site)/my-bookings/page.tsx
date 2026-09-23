@@ -10,6 +10,13 @@ import { getBookingsUser } from "@/server/db/user";
 import { formatBookingDateTime } from "@/lib/formatBookingDateTime";
 import { BookingWithUserVehicle } from "@/types/booking";
 import LoadMoreContainer from "@/components/LoadMoreList";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Bookings",
+  description:
+    "Manage your current, upcoming, and past car rentals with Blush Drive.",
+};
 
 const MyBookingsPage = async () => {
   const { userId: clerkUserId } = await auth();

@@ -1,7 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Diamond, Gauge, Leaf } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Learn more about Blush Drive, our mission, and our commitment to providing premium car rental experiences.",
+};
 
 const AboutPage = () => {
   return (
@@ -109,8 +116,8 @@ const AboutPage = () => {
                 </h3>
                 <p className="text-slate-500 text-sm max-w-md font-medium leading-relaxed">
                   Every vehicle in our fleet undergoes a rigorous 120-point
-                  inspection. We don't just meet industry standards; we define
-                  them.
+                  inspection. We don&apos;t just meet industry standards; we
+                  define them.
                 </p>
               </div>
               <div className="mt-12 flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest group/link cursor-pointer">
@@ -136,7 +143,7 @@ const AboutPage = () => {
                 Sustainable Luxury
               </h3>
               <p className="text-slate-500 font-medium text-sm">
-                Leading the transition to green mobility with the world's
+                Leading the transition to green mobility with the world&apos;s
                 largest collection of luxury electric performance vehicles.
               </p>
             </div>
@@ -210,10 +217,10 @@ const AboutPage = () => {
                 feel as rewarding as owning one.
               </p>
               <p>
-                Over the past decade, we've expanded across four continents, but
-                our core mission remains unchanged. We serve the explorers, the
-                dreamers, and the achievers who understand that the journey is
-                just as important as the destination.
+                Over the past decade, we&apos;ve expanded across four
+                continents, but our core mission remains unchanged. We serve the
+                explorers, the dreamers, and the achievers who understand that
+                the journey is just as important as the destination.
               </p>
               <p>
                 Today, LuxeDrive stands as the global leader in prestige vehicle
@@ -226,8 +233,9 @@ const AboutPage = () => {
                 Our Promise
               </p>
               <p className="text-slate-700 font-bold leading-relaxed italic text-base">
-                "To provide the most sophisticated, seamless, and personalized
-                transportation service in the world, without compromise."
+                &quot;To provide the most sophisticated, seamless, and
+                personalized transportation service in the world, without
+                compromise.&quot;
               </p>
             </div>
           </div>

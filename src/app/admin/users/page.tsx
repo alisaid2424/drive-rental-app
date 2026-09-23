@@ -4,6 +4,14 @@ import SearchInput from "../_components/SearchInput";
 import { AdminTable } from "@/components/AdminTable";
 import { userColumns } from "./_components/UserColumns";
 import { USERS_PER_PAGE } from "@/constants/enums";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Users Management",
+  description:
+    "View, manage, and monitor all registered system users, permissions, and roles.",
+  robots: { index: false, follow: false },
+};
 
 interface UsersPageProps {
   searchParams: Promise<{
@@ -12,7 +20,7 @@ interface UsersPageProps {
   }>;
 }
 
-export default async function UsersPage({ searchParams }: UsersPageProps) {
+const UsersPage = async ({ searchParams }: UsersPageProps) => {
   const { searchText = "", pageNumber = "1" } = await searchParams;
 
   const { users, totalCount, totalPages } = await getUsersBysearch({
@@ -44,4 +52,6 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
       />
     </div>
   );
-}
+};
+
+export default UsersPage;

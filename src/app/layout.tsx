@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
+import { DOMAIN } from "@/constants/enums";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -11,9 +12,33 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Blush Drive | Premium Car Rental",
+  title: {
+    template: "%s | Blush Drive",
+    default: "Blush Drive | Premium Car Rental",
+  },
   description:
     "Elevating your journey with premium vehicles and unparalleled service.",
+  icons: {
+    icon: [
+      {
+        url: "/images/car-key.png",
+        type: "image/png",
+      },
+    ],
+  },
+  metadataBase: new URL(DOMAIN),
+  openGraph: {
+    title: {
+      template: "%s | Blush Drive",
+      default: "Blush Drive | Premium Car Rental",
+    },
+    description:
+      "Elevating your journey with premium vehicles and unparalleled service.",
+    url: DOMAIN,
+    siteName: "Blush Drive",
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 type Props = {

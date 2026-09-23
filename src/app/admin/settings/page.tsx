@@ -7,6 +7,14 @@ import ButtonActions from "./_components/ButtonActions";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/db";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Account Settings",
+  description:
+    "Manage your administrator profile, security preferences, and system configurations.",
+  robots: { index: false, follow: false },
+};
 
 const SettingsPage = async () => {
   const { userId } = await auth();

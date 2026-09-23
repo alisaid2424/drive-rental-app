@@ -2,6 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Mail, MapPin, Phone, PlaneTakeoff, Star, Sun } from "lucide-react";
 import Image from "next/image";
 import { locations } from "./_components/data";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Our Locations",
+  description: "Find Blush Drive rental hubs and pickup locations near you.",
+};
 
 const LocationsPage = () => {
   return (

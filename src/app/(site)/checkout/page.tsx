@@ -4,6 +4,17 @@ import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/db";
 import { Pages } from "@/constants/enums";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Checkout & Secure Payment",
+  description:
+    "Complete your luxury car rental booking securely with Blush Drive.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 interface SearchParams {
   bookingId?: string;

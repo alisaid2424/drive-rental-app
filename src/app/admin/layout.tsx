@@ -1,5 +1,18 @@
+import { Metadata } from "next";
 import AdminNavbar from "./_components/AdminNavbar";
 import AdminSidebar from "./_components/AdminSidebar";
+
+export const metadata: Metadata = {
+  title: {
+    template: "Admin - %s | Blush Drive",
+    default: "Admin Dashboard",
+  },
+  description: "Blush Drive management and administration control panel.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (

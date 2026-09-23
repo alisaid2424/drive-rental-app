@@ -5,6 +5,13 @@ import { Heading } from "@/components/Heading";
 import VehicleCard from "@/components/VehicleCard";
 import { getVehiclesFilters } from "@/server/db/vehicle";
 import PaginationBrowse from "./_components/PaginationBrowse";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Browse Fleet",
+  description:
+    "Explore our exclusive collection of luxury and premium vehicles available for rent.",
+};
 
 type SearchParams = {
   type?: string;

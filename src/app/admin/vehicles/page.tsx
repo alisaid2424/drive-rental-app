@@ -7,6 +7,14 @@ import SearchInput from "../_components/SearchInput";
 import { getVehiclesForAdmin } from "@/server/db/vehicle";
 import { vehicleColumns } from "./_components/VehicleColumns";
 import { AdminTable } from "@/components/AdminTable";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Vehicle Fleet Control",
+  description:
+    "Manage and monitor your premium automobile catalog, maintenance status, and fleet performance.",
+  robots: { index: false, follow: false },
+};
 
 interface VehiclesPageProps {
   searchParams: Promise<{

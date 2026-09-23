@@ -12,6 +12,13 @@ import {
 import ContactForm from "./_components/ContactForm";
 import Link from "next/link";
 import Image from "next/image";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description:
+    "Get in touch with the Blush Drive team for support, inquiries, or special bookings.",
+};
 
 const ContactPage = () => {
   return (

@@ -8,12 +8,45 @@ import VehicleCard from "@/components/VehicleCard";
 import BookingForm from "./_components/BookingForm";
 import { getVehicle, getVehicles } from "@/server/db/vehicle";
 import { Vehicle } from "@prisma/client";
+import { Metadata } from "next";
 
 type PageProps = {
   params: Promise<{
     id: string;
   }>;
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const car = await getVehicle(id);
+
+  if (!car) {
+    return {
+      title: "Vehicle Not Found",
+    };
+  }
+
+  return {
+    title: car.name,
+    description: car.description,
+    openGraph: {
+      title: car.name,
+      description: car.description,
+      images: car.images?.[0]
+        ? [
+            {
+              url: car.images[0],
+              width: 1200,
+              height: 630,
+              alt: car.name,
+            },
+          ]
+        : [],
+    },
+  };
+}
 
 const CarDetailsPage = async ({ params }: PageProps) => {
   const { id } = await params;
