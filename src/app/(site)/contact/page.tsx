@@ -13,6 +13,7 @@ import ContactForm from "./_components/ContactForm";
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
+import { Heading } from "@/components/Heading";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -23,17 +24,14 @@ export const metadata: Metadata = {
 const ContactPage = () => {
   return (
     <div className="container-custom pt-32 pb-20">
-      {/* Heading */}
-      <div className="mb-12 md:text-center max-w-3xl md:mx-auto">
-        <h2 className="text-2xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight leading-none">
-          How can we help?
-        </h2>
-        <p className="text-sm max-w-xl md:mx-auto text-slate-500 font-medium leading-relaxed italic">
-          Experience premium service before you even get behind the wheel. Our
-          concierge team is available 24/7 to assist with your luxury travel
-          needs.
-        </p>
-      </div>
+      <Heading
+        title="How can we help?"
+        subtitle="Experience premium service before you even get behind the wheel. Our concierge team is available 24/7 to assist with your luxury travel needs."
+        align="left"
+        className="mb-12 max-w-3xl"
+        classNameTitle="text-2xl md:text-4xl font-black text-slate-900 tracking-tight leading-none"
+        classNameSubTitle="text-sm max-w-xl text-slate-500 font-medium leading-relaxed"
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Contact Info */}

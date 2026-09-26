@@ -34,7 +34,7 @@ const FavoritesPage = async () => {
 
       <div className="grid grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 gap-6 w-full pb-10">
         {favorites.map((car, index) => (
-          <VehicleCard key={index} car={car} />
+          <VehicleCard key={car.id} car={car} index={index} />
         ))}
       </div>
     </div>

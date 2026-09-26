@@ -1,4 +1,5 @@
 import PaginationAdmin from "@/app/admin/_components/PaginationAdmin";
+import Motion from "./Motion";
 
 export type Column<T> = {
   header: React.ReactNode;
@@ -32,7 +33,7 @@ export function AdminTable<T extends { id: string }>({
 }: AdminTableProps<T>) {
   return (
     <section className="bg-white/60 backdrop-blur-3xl rounded-[2rem] overflow-hidden border border-white/60 shadow-xl shadow-rose-500/5">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto overflow-y-hidden">
         <table className="w-full min-w-4xl">
           <thead>
             <tr className="bg-accent text-black ">
@@ -54,8 +55,10 @@ export function AdminTable<T extends { id: string }>({
                 const Index = (currentPage - 1) * itemsPerPage + rowIndex + 1;
 
                 return (
-                  <tr
+                  <Motion
+                    as="tr"
                     key={item.id}
+                    index={rowIndex}
                     className="hover:bg-accent/30 transition-colors"
                   >
                     {columns.map((col, colIndex) => (
@@ -66,7 +69,7 @@ export function AdminTable<T extends { id: string }>({
                         {col.cell(item, Index, data.length)}
                       </td>
                     ))}
-                  </tr>
+                  </Motion>
                 );
               })
             ) : (

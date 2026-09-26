@@ -44,20 +44,21 @@ const Header = () => {
 
         <div
           className={cn(
-            "flex items-center lg:me-auto gap-8 overflow-hidden transition-[width] duration-300",
+            "flex items-center gap-8 lg:me-auto lg:w-auto lg:transition-none",
 
-            "max-lg:absolute max-lg:top-0 max-lg:left-0 max-lg:z-50 max-lg:h-screen max-lg:flex-col max-lg:justify-center max-lg:bg-white/95 max-lg:backdrop-blur-2xl",
+            "max-lg:fixed max-lg:top-0 max-lg:z-50 max-lg:h-screen max-lg:w-full",
+            "max-lg:flex-col max-lg:justify-center max-lg:px-8",
+            "max-lg:bg-white/95 max-lg:backdrop-blur-2xl",
+            "max-lg:transition-[left] max-lg:duration-300 max-lg:ease-in-out",
 
-            isOpen ? "max-lg:w-full max-lg:px-8" : "max-lg:w-0 max-lg:px-0",
-
-            "lg:flex lg:flex-row lg:w-auto",
+            isOpen ? "max-lg:left-0" : "max-lg:-left-full",
           )}
         >
           {/* mobile close button */}
           <Button
             size="icon-lg"
             onClick={() => setIsOpen(false)}
-            className="group lg:hidden absolute top-8 right-8 h-10 w-10 cursor-pointer text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-rose-500 rounded-xl transition-all duration-300"
+            className="lg:hidden group absolute top-8 right-8 h-10 w-10 cursor-pointer text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-rose-500 rounded-md shadow-sm transition-all duration-300"
           >
             <X className="size-5 group-hover:rotate-180 transition duration-300" />
           </Button>

@@ -5,6 +5,7 @@ import LottieHandler from "./LottieHandler";
 import VehicleCard from "./VehicleCard";
 import { getTopRentedVehicles } from "@/server/db/vehicle";
 import LoadMoreContainer from "./LoadMoreList";
+import { Heading } from "./Heading";
 
 const FeaturedFleets = async () => {
   const topVehicles = await getTopRentedVehicles(8);
@@ -12,16 +13,14 @@ const FeaturedFleets = async () => {
   return (
     <section className="container-custom py-16">
       <div className="mb-20 flex w-full flex-col items-start justify-between gap-6 md:flex-row">
-        <div>
-          <h2 className="font-extrabold text-lg mb-3 text-foreground">
-            The Featured Fleet
-          </h2>
-
-          <p className="max-w-md text-sm text-slate-500">
-            Hand-picked selections for your premium experience. Explore our
-            exclusive collection of high-performance vehicles.
-          </p>
-        </div>
+        <Heading
+          title="The Featured Fleet"
+          subtitle="Hand-picked selections for your premium experience. Explore our
+            exclusive collection of high-performance vehicles."
+          className="items-start text-start"
+          classNameTitle="font-extrabold text-lg mb-3 text-foreground"
+          classNameSubTitle="justify-start max-w-md text-sm text-slate-500"
+        />
 
         <Link
           href={Pages.BROWSE}
@@ -35,10 +34,10 @@ const FeaturedFleets = async () => {
       {topVehicles.length ? (
         <LoadMoreContainer
           step={4}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-10"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
         >
           {topVehicles.map((car, index) => (
-            <VehicleCard key={index} car={car} />
+            <VehicleCard key={car.id} car={car} index={index} />
           ))}
         </LoadMoreContainer>
       ) : (
