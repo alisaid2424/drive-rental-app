@@ -25,7 +25,7 @@ export const VEHICLES_PER_PAGE = 6;
 export const ORDERS_PER_PAGE = 6;
 export const BOOKINGS_PER_PAGE = 6;
 
-const PRODUCTION_DOMAIN = "";
+const PRODUCTION_DOMAIN = "http://localhost:3000";
 
 const DEVELOPMENT_DOMAIN = "http://localhost:3000";
 

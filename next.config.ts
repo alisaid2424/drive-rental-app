@@ -10,8 +10,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react"],
   },
-
-  allowedDevOrigins: ["roseately-patternless-jensen.ngrok-free.dev"],
 };
 
 export default nextConfig;
