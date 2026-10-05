@@ -2,7 +2,7 @@
 
 import { useForm, Path, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import {
@@ -105,6 +105,11 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
       }
     });
   };
+
+  useEffect(() => {
+    form.reset(defaultValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vehicle?.id]);
 
   return (
     <Form {...form}>

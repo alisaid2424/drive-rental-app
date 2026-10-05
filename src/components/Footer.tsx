@@ -1,8 +1,29 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin, Send, Share2, Camera } from "lucide-react";
-import { footerLinks } from "@/constants/data";
+import CurrentYear from "./CurrentYear";
 
 const Footer = () => {
+  const footerLinks = {
+    fleet: [
+      { name: "Exotic Sports", href: "/browse?type=sports" },
+      { name: "Luxury Sedans", href: "/browse?type=sedan" },
+      { name: "Premium SUVs", href: "/browse?type=suv" },
+      { name: "Electric Elite", href: "/browse?type=electric" },
+    ],
+    company: [
+      { name: "About Us", href: "/about" },
+      { name: "Locations", href: "/locations" },
+      { name: "Contact Support", href: "/contact" },
+      { name: "Memberships", href: "/memberships" },
+    ],
+    support: [
+      { name: "Help Center", href: "/help" },
+      { name: "Privacy Policy", href: "/privacy" },
+      { name: "Terms of Service", href: "/terms" },
+      { name: "Insurance", href: "/insurance" },
+    ],
+  };
+
   return (
     <footer className="bg-slate-50 border-t border-slate-100 py-20">
       <div className="container-custom">
@@ -98,7 +119,7 @@ const Footer = () => {
 
         <div className="mt-20 pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-            © 2024 Blush Drive Premium Rentals. All rights reserved.
+            © <CurrentYear /> Blush Drive Premium Rentals. All rights reserved.
           </p>
           <div className="flex gap-8">
             {footerLinks.support.slice(1).map((link) => (

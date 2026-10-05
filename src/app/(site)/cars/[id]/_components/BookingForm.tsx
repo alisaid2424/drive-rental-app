@@ -92,10 +92,10 @@ const BookingForm = ({ vehicleId, pricePerDay }: Props) => {
 
       const res = await createBooking(vehicleId, data);
 
-      if (res.success) {
+      if (res.success && "data" in res && res.data) {
         toast.success(res.message);
 
-        router.push(`${Pages.CHECKOUT}?bookingId=${res.data?.id}`);
+        router.push(`${Pages.CHECKOUT}?bookingId=${res.data.id}`);
       } else {
         toast.error(res.message);
       }

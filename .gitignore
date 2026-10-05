@@ -13,8 +13,6 @@
 # testing
 /coverage
 
-src/constants/data.ts
-public/images/
 
 # next.js
 /.next/

@@ -83,7 +83,7 @@ const VehicleCard = async ({ car, index }: { car: Vehicle; index: number }) => {
 
           <Button
             variant="outline"
-            className="w-full border-2 border-rose-300 text-primary hover:bg-rose-500 hover:text-white transition-all duration-300 text-xs uppercase"
+            className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 text-xs uppercase"
           >
             View Details
           </Button>

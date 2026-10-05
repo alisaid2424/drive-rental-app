@@ -1,21 +1,7 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { Routes } from "@/constants/enums";
 import { BackButton } from "@/components/BackButton";
-import { SignIn, useUser } from "@clerk/nextjs";
+import { SignIn } from "@clerk/nextjs";
 
 export default function SignInPage() {
-  const { user, isLoaded } = useUser();
-  const router = useRouter();
-
-  if (!isLoaded) return null;
-
-  if (user) {
-    router.replace(Routes.ROOT);
-    return null;
-  }
-
   return (
     <div className="element-center bg-transparent h-screen">
       <div className="relative">

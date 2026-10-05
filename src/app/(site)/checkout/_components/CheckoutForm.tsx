@@ -167,7 +167,7 @@ const CheckoutFormContent = ({
 
   const sendEmail = async (booking: BookingWithUserVehicle) => {
     try {
-      const res = await fetch(`${DOMAIN}/api/send-email`, {
+      await fetch(`${DOMAIN}/api/send-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -182,10 +182,6 @@ const CheckoutFormContent = ({
           amount: booking.totalAmount,
         }),
       });
-
-      if (!res.ok) {
-        console.error("Failed to send email");
-      }
     } catch (err) {
       console.error("Email send error:", err);
     }

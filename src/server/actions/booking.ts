@@ -140,7 +140,8 @@ export async function createBooking(
 
       return {
         success: true,
-        message: "Reservation created successfully.",
+        message:
+          "Reservation created. Confirm within 24 hours or it will be canceled.",
         data: booking,
       };
     });
