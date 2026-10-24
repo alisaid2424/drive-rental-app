@@ -24,6 +24,12 @@ const Footer = () => {
     ],
   };
 
+  const socialLinks = [
+    { Icon: Camera, label: "Instagram" },
+    { Icon: Send, label: "Telegram" },
+    { Icon: Share2, label: "Share" },
+  ];
+
   return (
     <footer className="bg-slate-50 border-t border-slate-100 py-20">
       <div className="container-custom">
@@ -31,31 +37,34 @@ const Footer = () => {
           <div className="space-y-8">
             <Link
               href="/"
-              className="text-3xl font-black bg-linrar-to-r from-rose-400 to-rose-600 bg-clip-text text-transparent"
+              className="text-3xl font-black bg-linear-to-r from-rose-400 to-rose-600 bg-clip-text text-transparent"
             >
               Blush Drive
             </Link>
-            <p className="text-slate-500 text-sm leading-relaxed max-w-xs">
+
+            <p className="text-slate-500 text-sm leading-relaxed max-w-xs mt-3">
               Redefining the premium car rental experience with a curated fleet
               of the world&apos;s most prestigious vehicles. Experience
               excellence in every journey.
             </p>
             <div className="flex gap-4">
-              {[Camera, Send, Share2].map((Icon, i) => (
-                <div
+              {socialLinks.map(({ Icon, label }, i) => (
+                <button
                   key={i}
-                  className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:border-rose-200 transition-all cursor-pointer"
+                  type="button"
+                  aria-label={label}
+                  className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:border-rose-200 transition-all"
                 >
-                  <Icon size={18} />
-                </div>
+                  <Icon size={18} aria-hidden="true" focusable="false" />
+                </button>
               ))}
             </div>
           </div>
 
           <div>
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-8 italic">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-8 italic">
               The Fleet
-            </h4>
+            </p>
             <ul className="space-y-4">
               {footerLinks.fleet.map((link) => (
                 <li key={link.name}>
@@ -71,9 +80,9 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-8 italic">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-8 italic">
               Company
-            </h4>
+            </p>
             <ul className="space-y-4">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
@@ -89,12 +98,17 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-8 italic">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-900 mb-8 italic">
               Get in Touch
-            </h4>
+            </p>
             <ul className="space-y-6">
               <li className="flex items-start gap-4">
-                <MapPin className="text-rose-500 mt-1" size={18} />
+                <MapPin
+                  className="text-rose-500 mt-1"
+                  size={18}
+                  aria-hidden="true"
+                  focusable="false"
+                />
                 <span className="text-sm font-medium text-slate-500">
                   123 Luxury Blvd, Beverly Hills,
                   <br />
@@ -102,13 +116,23 @@ const Footer = () => {
                 </span>
               </li>
               <li className="flex items-center gap-4">
-                <Phone className="text-rose-500" size={18} />
+                <Phone
+                  className="text-rose-500"
+                  size={18}
+                  aria-hidden="true"
+                  focusable="false"
+                />
                 <span className="text-sm font-medium text-slate-500">
                   +1 (800) BLUSH-DRIVE
                 </span>
               </li>
               <li className="flex items-center gap-4">
-                <Mail className="text-rose-500" size={18} />
+                <Mail
+                  className="text-rose-500"
+                  size={18}
+                  aria-hidden="true"
+                  focusable="false"
+                />
                 <span className="text-sm font-medium text-slate-500">
                   concierge@blushdrive.com
                 </span>

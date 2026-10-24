@@ -59,8 +59,8 @@ const MyBookingsPage = async () => {
                           fill
                           sizes="(max-width: 768px) 100vw, 256px"
                           className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                          loading="eager"
-                          priority
+                          priority={index === 0}
+                          loading={index === 0 ? "eager" : "lazy"}
                         />
                         <div className="absolute top-4 left-4">
                           <Badge

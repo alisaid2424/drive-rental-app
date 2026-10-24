@@ -48,6 +48,17 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={cn("antialiased", inter.variable, "font-sans")}>
+      <head>
+        <link
+          rel="preconnect"
+          href="https://charmed-griffon-65.clerk.accounts.dev"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="dns-prefetch"
+          href="https://charmed-griffon-65.clerk.accounts.dev"
+        />
+      </head>
       <body>
         <ClerkProvider
           appearance={{

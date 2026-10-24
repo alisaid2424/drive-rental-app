@@ -16,9 +16,13 @@ import { User } from "@prisma/client";
 
 interface EditUserButtonProps {
   user: User;
+  "aria-label"?: string;
 }
 
-export function EditUserButton({ user }: EditUserButtonProps) {
+export function EditUserButton({
+  user,
+  "aria-label": ariaLabel,
+}: EditUserButtonProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -27,6 +31,7 @@ export function EditUserButton({ user }: EditUserButtonProps) {
         <Button
           size="sm"
           variant="outline"
+          aria-label={ariaLabel || "Edit user"}
           className="w-9 h-9 rounded-full border-slate-200 hover:bg-green-50 hover:border-green-200"
         >
           <Pencil className="size-4 text-green-500" />

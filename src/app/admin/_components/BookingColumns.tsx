@@ -35,7 +35,9 @@ export const bookingColumns: Column<BookingWithUserVehicle>[] = [
             alt={booking.vehicle.name}
             src={booking.vehicle.images[0]}
             fill
+            sizes="48px"
             className="object-cover"
+            loading="lazy"
           />
         </div>
         <span className="text-xs font-bold text-slate-800">

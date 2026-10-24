@@ -40,9 +40,9 @@ const VehiclesListPage = async ({ searchParams }: VehiclesPageProps) => {
           align="left"
         />
 
-        <Link href={`${Routes.LISTVEHICLES}/add-vehicle `} className="shrink-0">
+        <Link href={`${Routes.LISTVEHICLES}/add-vehicle`} className="shrink-0">
           <Button className="h-12 px-8 rounded-full text-sm">
-            <Plus className="size-5" />
+            <Plus className="size-5" aria-hidden="true" />
             Add New Car
           </Button>
         </Link>

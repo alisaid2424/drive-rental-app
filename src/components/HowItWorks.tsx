@@ -40,11 +40,13 @@ const HowItWorks = () => {
             <Motion
               key={title}
               index={idx}
-              className="flex flex-col items-center text-center process-card group cursor-pointer"
+              className="flex flex-col items-center text-center process-card group"
             >
               <div className="process-icon-container shadow-[0_20px_40px_rgba(0,0,0,0.05)]">
                 <Icon
                   size={48}
+                  aria-hidden="true"
+                  focusable="false"
                   className="text-primary group-hover:text-white transition-colors duration-300"
                 />
               </div>

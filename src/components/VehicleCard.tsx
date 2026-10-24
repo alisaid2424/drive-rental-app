@@ -30,8 +30,9 @@ const VehicleCard = async ({ car, index }: { car: Vehicle; index: number }) => {
             alt={car.name}
             src={car.images[0]}
             fill
-            priority
-            loading="eager"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            priority={index < 4}
+            loading={index < 4 ? "eager" : "lazy"}
           />
           <div className="absolute top-4 left-3 bg-white/95 backdrop-blur-md px-3 py-2 rounded-full text-[10px] font-black uppercase tracking-wide text-slate-600 shadow-sm">
             {car.type || "Premium"}

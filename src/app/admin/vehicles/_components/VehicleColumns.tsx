@@ -25,6 +25,8 @@ export const vehicleColumns: Column<VehicleWithBookings>[] = [
           src={car.images[0]}
           alt={car.name}
           fill
+          sizes="96px"
+          loading="lazy"
           className="object-cover transition-transform duration-300 hover:scale-105"
         />
       </div>
@@ -77,6 +79,7 @@ export const vehicleColumns: Column<VehicleWithBookings>[] = [
           <Button
             size="sm"
             variant="outline"
+            aria-label={`Edit ${car.name}`}
             className="w-9 h-9 rounded-full border-slate-200 hover:bg-green-50 hover:border-green-200"
           >
             <Pencil className="size-4 text-green-500" />
@@ -90,6 +93,7 @@ export const vehicleColumns: Column<VehicleWithBookings>[] = [
           title="Delete Vehicle?"
           description="Are you sure you want to delete this vehicle?"
           currentItemsCount={totalCurrentItems}
+          aria-label="Delete vehicle"
         />
       </div>
     ),

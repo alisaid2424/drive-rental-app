@@ -24,11 +24,16 @@ const ButtonActions = () => {
         form="profile-form"
         className="flex-1"
         disabled={isSubmitting}
+        aria-busy={isSubmitting}
       >
         {isSubmitting ? (
           <>
             Saving...
-            <LoaderCircle className="ml-2 animate-spin" size={18} />
+            <LoaderCircle
+              className="ml-2 animate-spin"
+              size={18}
+              aria-hidden="true"
+            />
           </>
         ) : (
           "Save Changes"

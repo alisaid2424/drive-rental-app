@@ -59,6 +59,7 @@ const Header = () => {
             size="icon-lg"
             onClick={() => setIsOpen(false)}
             className="lg:hidden group absolute top-8 right-8 h-10 w-10 cursor-pointer text-slate-600 bg-slate-50 hover:bg-slate-100 hover:text-rose-500 rounded-md shadow-sm transition-all duration-300"
+            aria-label="Close menu"
           >
             <X className="size-5 group-hover:rotate-180 transition duration-300" />
           </Button>
@@ -108,7 +109,7 @@ const Header = () => {
           </div>
 
           {/* notifications */}
-          <button className="icon-btn-header">
+          <button className="icon-btn-header" aria-label="Notifications">
             <Bell size={18} />
           </button>
 
@@ -116,7 +117,11 @@ const Header = () => {
           {user ? (
             <UserMenu />
           ) : (
-            <button onClick={() => openSignIn()} className="icon-btn-header">
+            <button
+              onClick={() => openSignIn()}
+              className="icon-btn-header"
+              aria-label="Sign in"
+            >
               <User size={18} />
             </button>
           )}
@@ -126,6 +131,7 @@ const Header = () => {
             size="icon"
             variant="link"
             className=" cursor-pointer p-2 text-slate-600 dark:text-slate-400 lg:hidden max-md:ms-2"
+            aria-label="Open menu"
             onClick={() => setIsOpen(true)}
           >
             <Menu className="size-6" />

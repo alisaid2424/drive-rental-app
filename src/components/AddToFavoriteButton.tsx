@@ -47,6 +47,7 @@ const AddToFavoriteButton = ({
       size="icon"
       onClick={handleAddToFavoriteButton}
       data-hover-icon
+      aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
       className="
     absolute top-4 right-3 bg-white/30 backdrop-blur-md size-10 element-center p-3 rounded-full border-0 active:scale-95 
     hover:bg-primary transition

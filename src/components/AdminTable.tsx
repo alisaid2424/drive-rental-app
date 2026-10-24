@@ -34,12 +34,13 @@ export function AdminTable<T extends { id: string }>({
   return (
     <section className="bg-white/60 backdrop-blur-3xl rounded-[2rem] overflow-hidden border border-white/60 shadow-xl shadow-rose-500/5">
       <div className="overflow-x-auto overflow-y-hidden">
-        <table className="w-full min-w-4xl">
+        <table className="w-full min-w-4xl" aria-label={`${tableType} list`}>
           <thead>
             <tr className="bg-accent text-black ">
               {columns.map((col, idx) => (
                 <th
                   key={idx}
+                  scope="col"
                   className={`px-6 py-4 text-sm font-semibold text-slate-600 ${
                     col.headerClassName ? col.headerClassName : "text-left"
                   }`}
@@ -77,6 +78,7 @@ export function AdminTable<T extends { id: string }>({
                 <td
                   colSpan={columns.length}
                   className="py-7 text-center text-sm text-slate-600 font-medium"
+                  role="status"
                 >
                   {`No data containing ${tableType}.`}
                 </td>

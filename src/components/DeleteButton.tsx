@@ -21,6 +21,7 @@ interface DeleteButtonProps {
   variant?: VariantProps<typeof buttonVariants>["variant"];
   size?: VariantProps<typeof buttonVariants>["size"];
   children?: ReactNode;
+  "aria-label"?: string;
 }
 
 export const DeleteButton = ({
@@ -35,6 +36,7 @@ export const DeleteButton = ({
   variant = "outline",
   size = "sm",
   children,
+  "aria-label": ariaLabel,
 }: DeleteButtonProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -80,6 +82,7 @@ export const DeleteButton = ({
       disabled={disabled || isPending}
       onClick={handleDelete}
       title={title}
+      aria-label={ariaLabel || (children ? undefined : "Delete")}
       className={cn(
         "w-9 h-9 rounded-full border-slate-200 hover:bg-rose-50 hover:border-rose-200 disabled:opacity-50",
         className,

@@ -34,6 +34,7 @@ export function BookingActions({
             variant="ghost"
             onClick={() => setActiveDialog("details")}
             className="text-sky-600 hover:bg-sky-50 hover:text-sky-700"
+            aria-label="View booking details"
             title="Details Booking"
           >
             <Info className="size-5" />
@@ -46,6 +47,7 @@ export function BookingActions({
             className="bg-emerald-50 text-emerald-600 border border-emerald-200
             hover:bg-emerald-100 hover:border-emerald-500"
             onClick={() => setActiveDialog("confirm")}
+            aria-label="Confirm and pay for booking"
             title="Confirm Booking"
           >
             <CreditCard className="size-4" />
@@ -56,6 +58,7 @@ export function BookingActions({
             onClick={() => setActiveDialog("modify")}
             className="bg-amber-50 text-amber-600 border border-amber-200
             hover:bg-amber-100 hover:border-amber-500"
+            aria-label="Edit booking"
             title="Edit Booking"
           >
             <Edit3 className="size-4" />
@@ -69,6 +72,7 @@ export function BookingActions({
             currentItemsCount={currentItemsCount}
             variant="secondary"
             size="icon"
+            aria-label="Delete booking"
             className="w-10 h-10 rounded-md bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100 hover:border-rose-500 transition-colors"
           />
         </div>

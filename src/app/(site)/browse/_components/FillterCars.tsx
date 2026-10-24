@@ -233,7 +233,7 @@ const FillterCars = () => {
       {/* Promotion Card */}
       <div className="bg-primary rounded-2xl p-8 text-white relative overflow-hidden mt-6">
         <div className="relative z-10">
-          <h4 className="text-lg font-bold mb-2">Summer Drive Special</h4>
+          <h3 className="text-lg font-bold mb-2">Summer Drive Special</h3>
           <p className="text-xs text-rose-100 mb-6 leading-relaxed">
             Enjoy 15% off on all luxury SUVs this month.
           </p>

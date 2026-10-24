@@ -50,12 +50,17 @@ const AdminSidebar = () => {
 
   return (
     <aside className="fixed left-0 top-18 h-[calc(100vh-72px)] w-16 lg:w-56 bg-white/40 backdrop-blur-2xl border-r border-white/20 shadow-2xl shadow-primary/5 flex flex-col z-40">
-      <nav className="flex-1 pt-2">
+      <nav className="flex-1 pt-2" aria-label="Admin navigation">
         {adminItems.map(({ name, href, icon: Icon }) => {
           const isActive = isActiveTab(href);
 
           return (
-            <Link key={name} href={href}>
+            <Link
+              key={name}
+              href={href}
+              aria-label={name}
+              aria-current={isActive ? "page" : undefined}
+            >
               <div
                 className={`flex items-center gap-3 py-4 px-4 lg:px-6 transition-all ${
                   isActive
@@ -79,6 +84,7 @@ const AdminSidebar = () => {
         <Button
           onClick={() => router.push(`${Routes.LISTVEHICLES}/add-vehicle`)}
           className="w-full py-5"
+          aria-label="Add new car"
         >
           <Plus className="size-5" />
 
@@ -90,7 +96,7 @@ const AdminSidebar = () => {
 
       {/* Bottom Section */}
       <div className="pt-2 pb-10">
-        <Link href="#">
+        <Link href="#" aria-label="Help Center">
           <div className="flex items-center gap-3 py-4 px-4 lg:px-6 text-secondary hover:text-primary transition-all">
             <CircleHelp className="w-5 h-5" />
 
@@ -101,6 +107,7 @@ const AdminSidebar = () => {
         <Link
           href={Routes.ROOT}
           className="w-full flex items-center gap-3 py-4 px-4 lg:px-6 text-secondary hover:text-primary transition-all"
+          aria-label="Logout"
         >
           <LogOut className="w-5 h-5" />
 

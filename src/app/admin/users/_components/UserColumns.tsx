@@ -28,10 +28,11 @@ export const userColumns: Column<User>[] = [
         {user.image ? (
           <div className="w-10 h-10 rounded-full shrink-0 overflow-hidden border border-white shadow-sm relative">
             <Image
-              alt={user.name || "User"}
+              alt={user.name || "User avatar"}
               src={user.image}
               width={40}
               height={40}
+              loading="lazy"
               className="w-full h-full object-cover"
             />
           </div>
@@ -136,7 +137,7 @@ export const userColumns: Column<User>[] = [
       const isAdmin = user.role === "ADMIN";
       return (
         <div className="flex items-center justify-center gap-2">
-          <EditUserButton user={user} />
+          <EditUserButton user={user} aria-label="Edit user" />
 
           <DeleteButton
             id={user.clerkUserId}
@@ -145,6 +146,7 @@ export const userColumns: Column<User>[] = [
             title="Delete User?"
             description="Are you sure you want to delete this user?"
             currentItemsCount={totalCurrentItems}
+            aria-label="Delete user"
           />
         </div>
       );

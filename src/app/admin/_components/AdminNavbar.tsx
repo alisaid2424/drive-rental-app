@@ -30,11 +30,15 @@ const AdminNavbar = () => {
           <input
             className="bg-transparent border-none outline-none text-sm w-full p-0 focus:ring-0"
             placeholder="Quick search..."
-            type="text"
+            type="search"
+            aria-label="Quick search"
           />
         </div>
 
-        <button className="p-2.5 text-slate-500 hover:bg-rose-50 rounded-full transition-all relative">
+        <button
+          className="p-2.5 text-slate-500 hover:bg-rose-50 rounded-full transition-all relative"
+          aria-label="Notifications"
+        >
           <Bell className="w-5 h-5" />
           <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
         </button>

@@ -64,7 +64,7 @@ const FormSearchCarRental = () => {
               fieldTitle="SEARCH CAR OR BRAND"
               nameInSchema="carQuery"
               placeholder="Lamborghini, Porsche, SF90..."
-              className="h-12 mt-1 text-sm text-primary rounded-xl font-medium caret-primary placeholder:text-primary"
+              className="h-12 mt-1 text-sm text-gray-900 rounded-xl font-medium caret-primary placeholder:text-gray-500"
               showCarIcon
             />
           </div>
@@ -74,7 +74,7 @@ const FormSearchCarRental = () => {
               fieldTitle="RENTAL DATE"
               nameInSchema="rentalDate"
               type="datetime-local"
-              className="h-12 mt-1 text-sm text-primary font-medium rounded-xl"
+              className="h-12 mt-1 text-sm text-gray-900 font-medium rounded-xl"
             />
           </div>
 

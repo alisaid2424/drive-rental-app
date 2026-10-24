@@ -92,7 +92,7 @@ const ProfileForm = ({ user }: Props) => {
           <div className="relative group">
             <div className="w-24 h-24 rounded-2xl overflow-hidden ring-2 ring-gray-300 shadow-md relative">
               <Image
-                alt="Profile Avatar"
+                alt="Profile picture"
                 className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-300"
                 src={
                   user?.image ??
@@ -102,11 +102,16 @@ const ProfileForm = ({ user }: Props) => {
                 height={200}
                 priority
               />
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+              <button
+                type="button"
+                aria-label="Change profile picture"
+                className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+              >
                 <Camera className="text-white" size={22} />
-              </div>
+              </button>
             </div>
           </div>
+
           <div>
             <h3 className="text-xl font-bold tracking-tight">
               Profile Information

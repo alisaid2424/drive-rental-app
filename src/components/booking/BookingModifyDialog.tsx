@@ -101,9 +101,9 @@ export function BookingModifyDialog({
               />
             </div>
             <div>
-              <h4 className="text-base sm:text-xl font-black uppercase text-slate-900">
+              <h3 className="text-base sm:text-xl font-black uppercase text-slate-900">
                 {booking.vehicle.name}
-              </h4>
+              </h3>
               <div className="flex items-center gap-4 text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">
                 <span className="flex items-center gap-2">
                   <Users size={12} className="text-rose-500" />{" "}
