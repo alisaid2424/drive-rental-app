@@ -1,9 +1,19 @@
 "use client";
 
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
 import notFound from "../assets/animation/notFound.json";
 import empty from "../assets/animation/empty.json";
 import error from "../assets/animation/error.json";
+
+const Lottie = dynamic(
+  () => import("lottie-react").then((mod) => mod.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="mx-auto w-full max-w-[288px] aspect-square rounded-full bg-muted/40 animate-pulse" />
+    ),
+  },
+);
 
 const lottieFilesmap = {
   notFound,
