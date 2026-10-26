@@ -1,6 +1,5 @@
 import Image from "next/image";
 import FormSearchCarRental from "./_components/FormSearchCarRental";
-import Motion from "../Motion";
 
 const Hero = () => {
   return (
@@ -8,12 +7,11 @@ const Hero = () => {
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7R9MBodefnW4jTFUc33zacidOm8pneAyQ4ExdSYFh7I4ieD8ABAe_IQziF6DFKkROYhdLQljc0iH4OQU60VHvqaOGqpkyDyGRcZeaSROOzBGR_Wk-oRvmrCzlQl8KzQKjnugmv5lTASNhZtqB_rBQA4m3SHjtkP6keGNCCWZreiWdnxj3Mw0YXclnVzwunbm7J_Wt_zrevY7QxoCX6pzOLRe7RrGkt-YNNxusvXG-EXukA2lJGk_o9tKvod6svR_HKw_dqeTP-vU"
+          src="/images/hero-bg.webp"
           alt="Luxury sports car driving along a coastal highway at sunset"
           fill
           priority
           sizes="100vw"
-          quality={80}
           className="object-cover"
         />
         <div className="absolute inset-0 bg-linear-to-b from-black/30 via-transparent to-background" />
@@ -21,7 +19,7 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-8 pt-10 text-center">
-        <Motion>
+        <div>
           <span className="mb-4 rounded-full bg-white/10 px-4 py-1 text-xs font-medium uppercase tracking-[0.2em] text-white backdrop-blur-md md:text-sm">
             Experience the Extraordinary
           </span>
@@ -31,7 +29,7 @@ const Hero = () => {
             Journey With <br />
             <span className="italic font-light text-primary">Elegance</span>
           </h1>
-        </Motion>
+        </div>
 
         {/* Search Card */}
         <FormSearchCarRental />

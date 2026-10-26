@@ -12,7 +12,7 @@ import { Form } from "@/components/ui/form";
 import { InputWithLabel } from "@/components/inputs/InputWithLabel";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
+import Motion from "@/components/Motion";
 
 const FormSearchCarRental = () => {
   const router = useRouter();
@@ -40,12 +40,7 @@ const FormSearchCarRental = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.2 }}
-      className="glass-card mt-5 md:mt-12 w-full max-w-5xl rounded-[32px] p-2 shadow-2xl shadow-black/10 md:rounded-[40px]"
-    >
+    <Motion className="glass-card mt-5 md:mt-12 w-full max-w-5xl rounded-[32px] p-2 shadow-2xl shadow-black/10 md:rounded-[40px]">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -99,7 +94,7 @@ const FormSearchCarRental = () => {
           </div>
         </form>
       </Form>
-    </motion.div>
+    </Motion>
   );
 };
 

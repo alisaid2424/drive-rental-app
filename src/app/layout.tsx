@@ -58,6 +58,20 @@ export default function RootLayout({ children }: Props) {
           rel="dns-prefetch"
           href="https://charmed-griffon-65.clerk.accounts.dev"
         />
+
+        <link
+          rel="preconnect"
+          href="https://lh3.googleusercontent.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="dns-prefetch" href="https://lh3.googleusercontent.com" />
+
+        <link
+          rel="preconnect"
+          href="https://res.cloudinary.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
       </head>
       <body>
         <ClerkProvider
