@@ -1,5 +1,6 @@
 import * as motion from "motion/react-client";
 import { cn } from "@/lib/utils";
+import Motion from "./Motion";
 
 type Props = {
   title: string;
@@ -22,11 +23,6 @@ const titleCharVariants = {
       duration: 1,
     },
   },
-};
-
-const subtitleCharVariants = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0 },
 };
 
 export function Heading({
@@ -79,35 +75,14 @@ export function Heading({
       </motion.h2>
 
       {subtitle && (
-        <motion.p
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={{
-            visible: {
-              transition: { staggerChildren: 0.02 },
-            },
-          }}
+        <Motion
           className={cn(
-            "flex flex-wrap gap-x-[0.25em] justify-center text-sm font-medium text-gray-500/90 mt-2 max-w-md",
-            align === "left" && "md:justify-start",
+            "text-sm font-medium text-gray-500/90 mt-2 max-w-md",
             classNameSubTitle,
           )}
         >
-          {subtitle.split(" ").map((word, wordIdx) => (
-            <span key={wordIdx} className="inline-flex whitespace-nowrap">
-              {word.split("").map((char, charIdx) => (
-                <motion.span
-                  key={charIdx}
-                  variants={subtitleCharVariants}
-                  className="inline-block"
-                >
-                  {char}
-                </motion.span>
-              ))}
-            </span>
-          ))}
-        </motion.p>
+          <p>{subtitle}</p>
+        </Motion>
       )}
     </div>
   );

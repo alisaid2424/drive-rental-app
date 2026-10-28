@@ -12,7 +12,7 @@ const Hero = () => {
           fill
           priority
           sizes="100vw"
-          quality={75}
+          quality={80}
           className="object-cover"
         />
         <div className="absolute inset-0 bg-linear-to-b from-black/30 via-transparent to-background" />
