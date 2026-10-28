@@ -1,42 +1,51 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import notFound from "../assets/animation/notFound.json";
-import empty from "../assets/animation/empty.json";
-import error from "../assets/animation/error.json";
 
-const Lottie = dynamic(
-  () => import("lottie-react").then((mod) => mod.default),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="mx-auto w-full max-w-[288px] aspect-square rounded-full bg-muted/40 animate-pulse" />
-    ),
-  },
+const LottieSkeleton = () => (
+  <div className="mx-auto w-full max-w-[288px] aspect-square rounded-full bg-muted/40 animate-pulse" />
 );
 
-const lottieFilesmap = {
-  notFound,
-  empty,
-  error,
+const createLottie = (importJson: () => Promise<{ default: object }>) =>
+  dynamic(
+    async () => {
+      const [Lottie, json] = await Promise.all([
+        import("lottie-react").then((m) => m.default),
+        importJson().then((m) => m.default),
+      ]);
+      return {
+        default: () => <Lottie animationData={json} loop />,
+      };
+    },
+    {
+      ssr: false,
+      loading: LottieSkeleton,
+    },
+  );
+
+const lottieMap = {
+  notFound: createLottie(() => import("../assets/animation/notFound.json")),
+  empty: createLottie(() => import("../assets/animation/empty.json")),
+  error: createLottie(() => import("../assets/animation/error.json")),
 };
 
 interface LottieHandlerProps {
-  type: keyof typeof lottieFilesmap;
+  type: keyof typeof lottieMap;
   message?: string;
 }
 
 const LottieHandler = ({ type, message }: LottieHandlerProps) => {
-  const lottie = lottieFilesmap[type];
+  const AnimationComponent = lottieMap[type];
+
   return (
     <div className="mx-auto w-full max-w-xs text-center">
-      <Lottie animationData={lottie} />
+      <AnimationComponent />
+
       {message && (
         <h3
-          className={`mt-5 text-lg font-medium 
-        ${type === "error" ? "text-destructive" : "text-muted-foreground"} 
-        wrap-break-word whitespace-pre-wrap `}
-          style={{ wordBreak: "break-word" }}
+          className={`mt-5 text-lg font-medium ${
+            type === "error" ? "text-destructive" : "text-muted-foreground"
+          } wrap-break-word whitespace-pre-wrap`}
         >
           {message}
         </h3>

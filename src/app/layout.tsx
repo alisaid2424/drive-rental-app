@@ -12,19 +12,6 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const clerkDomain = "https://charmed-griffon-65.clerk.accounts.dev";
-const googleDomain = "https://lh3.googleusercontent.com";
-const cloudinaryDomain = "https://res.cloudinary.com";
-
-preconnect(clerkDomain, { crossOrigin: "anonymous" });
-prefetchDNS(clerkDomain);
-
-preconnect(googleDomain, { crossOrigin: "anonymous" });
-prefetchDNS(googleDomain);
-
-preconnect(cloudinaryDomain, { crossOrigin: "anonymous" });
-prefetchDNS(cloudinaryDomain);
-
 export const metadata: Metadata = {
   title: {
     template: "%s | Blush Drive",
@@ -60,6 +47,17 @@ type Props = {
 };
 
 export default function RootLayout({ children }: Props) {
+  preconnect("https://charmed-griffon-65.clerk.accounts.dev", {
+    crossOrigin: "anonymous",
+  });
+  prefetchDNS("https://charmed-griffon-65.clerk.accounts.dev");
+
+  preconnect("https://lh3.googleusercontent.com", { crossOrigin: "anonymous" });
+  prefetchDNS("https://lh3.googleusercontent.com");
+
+  preconnect("https://res.cloudinary.com", { crossOrigin: "anonymous" });
+  prefetchDNS("https://res.cloudinary.com");
+
   return (
     <html lang="en" className={cn("antialiased", inter.variable, "font-sans")}>
       <body>
