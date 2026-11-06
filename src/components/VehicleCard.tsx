@@ -3,21 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { Vehicle } from "@prisma/client";
-import { clerkClient } from "@clerk/clerk-sdk-node";
-import { auth } from "@clerk/nextjs/server";
 import AddToFavoriteButton from "./AddToFavoriteButton";
 import Motion from "./Motion";
 
-const VehicleCard = async ({ car, index }: { car: Vehicle; index: number }) => {
-  const { userId } = await auth();
-  let isFavorite = false;
-
-  if (userId) {
-    const user = await clerkClient.users.getUser(userId);
-    const favorites = (user.privateMetadata?.favorites as string[]) || [];
-    isFavorite = favorites.includes(car.id);
-  }
-
+const VehicleCard = async ({
+  car,
+  index,
+  isFavorite = false,
+}: {
+  car: Vehicle;
+  index: number;
+  isFavorite: boolean;
+}) => {
   return (
     <Motion
       index={index}

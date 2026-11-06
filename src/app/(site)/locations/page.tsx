@@ -13,7 +13,7 @@ const LocationsPage = () => {
   return (
     <section className="pt-28 container-custom">
       <article>
-        <div className="relative h-100 flex items-center justify-center overflow-hidden rounded-[2.5rem] shadow-2xl shadow-rose-500/5">
+        <div className="relative h-100 flex items-center justify-center overflow-hidden rounded-2xl sm:rounded-[2.5rem] shadow-2xl shadow-rose-500/5">
           <Image
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_DxRzs54X3zvrkHN_AxRrWYtrWmiFxzpMf73mUOdE5oSN9P_mJfjKFJRIXj3mQD1etFYbR0MjDiNLJWma_snkBnGr1M2g6Byu6oXtbI72_VXgcjuMQvmK3IohUSqkHfij0HMemejwkTu0urJAwL9K2ZlsXXPD0MGqfbbVNGVibDgm0g-dSCFFV03d_pTA4LZkAQbJFJH-Fh0PMZ-U8IEvAjNdNj4RrD_m8izWcWxXNMzRT-wgwTnG2qk5z1ROJ3ux0wtQLk0_T8o"
             alt="Modern luxury car showroom"
@@ -24,7 +24,7 @@ const LocationsPage = () => {
           />
           <div className="absolute inset-0 bg-black/30 z-15" />
           <div className="relative z-20 text-center px-6">
-            <h2 className="text-3xl md:text-5xl font-black text-white mb-4 uppercase leading-none">
+            <h2 className="text-[22px] sm:text-3xl md:text-5xl font-black text-white mb-4 uppercase leading-none">
               Our Global Network
             </h2>
             <p className="text-white/90 text-base max-w-xl mx-auto font-medium">
@@ -105,13 +105,13 @@ const LocationsPage = () => {
 
                 <div className="md:w-3/5 p-8 flex flex-col justify-between">
                   <div>
-                    <div className="flex justify-between items-start mb-6">
-                      <h2 className="text-xl font-black text-primary uppercase tracking-tight">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 gap-2">
+                      <h2 className="text-base sm:text-xl font-black text-primary tracking-tight">
                         {location.title}
                       </h2>
 
                       <span
-                        className={`${location.badgeClass} font-black px-2 py-1.5 rounded-lg text-[8px] uppercase tracking-widest shadow-sm`}
+                        className={`${location.badgeClass} w-fit font-black px-2 py-1.5 rounded-lg text-[9px] uppercase tracking-widest shadow-sm`}
                       >
                         {location.badge}
                       </span>
@@ -144,11 +144,16 @@ const LocationsPage = () => {
                     </div>
                   </div>
 
-                  <div className="mt-10 flex gap-4">
-                    <Button variant="outline" className="flex-1 text-primary!">
+                  <div className="mt-10 flex flex-col sm:flex-row gap-4">
+                    <Button
+                      variant="outline"
+                      className="flex-1 text-primary! max-sm:py-3"
+                    >
                       View Map
                     </Button>
-                    <Button className="flex-1">Book Selection</Button>
+                    <Button className="flex-1 max-sm:py-3">
+                      Book Selection
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -193,12 +198,12 @@ const LocationsPage = () => {
         </div>
       </article>
 
-      <article className="bg-white/70 backdrop-blur-3xl py-20 px-5 rounded-[4rem] mb-20 text-center relative overflow-hidden border border-white/60 shadow-2xl shadow-rose-500/5">
+      <article className="bg-white/70 backdrop-blur-3xl py-20 px-5 rounded-2xl sm:rounded-[4rem] mb-20 text-center relative overflow-hidden border border-white/60 shadow-2xl shadow-rose-500/5">
         <div className="absolute top-0 left-0 w-96 h-96 bg-rose-500/10 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl animate-pulse" />
         <div className="absolute bottom-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full translate-x-1/2 translate-y-1/2 blur-2xl" />
 
         <div className="relative z-10">
-          <h2 className="text-4xl font-black text-primary mb-5 uppercase tracking-tighter">
+          <h2 className="text-2xl sm:text-4xl font-black text-primary mb-5 uppercase tracking-tighter">
             Request a Delivery
           </h2>
           <p className="text-slate-500 max-w-2xl mx-auto mb-12 font-medium text-base leading-relaxed">
@@ -208,12 +213,12 @@ const LocationsPage = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <input
-              className="w-full sm:max-w-sm px-8 py-4 rounded-2xl! border-2 border-rose-300 bg-white focus:ring-2 focus:ring-primary focus:border-0 caret-primary shadow-inner outline-none text-sm font-bold placeholder:text-slate-300"
+              className="w-full sm:max-w-sm px-8 py-4 rounded-md sm:rounded-2xl! border-2 border-rose-300 bg-white focus:ring-2 focus:ring-primary focus:border-0 caret-primary shadow-inner outline-none text-sm font-bold placeholder:text-slate-300"
               placeholder="Enter your email for a custom quote"
               type="email"
               autoComplete="off"
             />
-            <Button className="max-sm:w-full px-12 py-7.5 rounded-2xl! uppercase hover:shadow-2xl transition-all shadow-xl shadow-rose-500/30">
+            <Button className="max-sm:w-full px-12 py-7.5 rounded-md sm:rounded-2xl! uppercase hover:shadow-2xl transition-all shadow-xl shadow-rose-500/30">
               Send Request
             </Button>
           </div>

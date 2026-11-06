@@ -66,7 +66,7 @@ export default function CarImagesView({ images, carName }: Props) {
               />
 
               {index === images.length - 1 && (
-                <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 px-2 py-1 md:px-4 md:py-2 bg-white/90 rounded-full text-[10px] md:text-xs font-semibold">
+                <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 px-2 py-1 md:px-4 md:py-2 bg-white/90 rounded-full text-[8px] sm:text-[10px] md:text-xs font-semibold">
                   View All Photos
                 </div>
               )}

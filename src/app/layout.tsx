@@ -49,7 +49,11 @@ type Props = {
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="en" className={cn("antialiased", inter.variable, "font-sans")}>
+    <html
+      lang="en"
+      className={cn("antialiased", inter.variable, "font-sans")}
+      data-scroll-behavior="smooth"
+    >
       <head>
         <link
           rel="preconnect"

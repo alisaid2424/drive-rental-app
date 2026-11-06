@@ -7,19 +7,20 @@ datasource db {
 }
 
 model User {
-  id          String    @id @default(uuid())
-  clerkUserId String    @unique
-  email       String    @unique
+  id          String     @id @default(uuid())
+  clerkUserId String     @unique
+  email       String     @unique
   password    String?
   name        String?
   image       String?
   phone       String?
   bio         String?
   timezone    String?
-  role        UserRole  @default(USER)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  role        UserRole   @default(USER)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   bookings    Booking[]
+  favorites   Favorite[]
 }
 
 model Vehicle {
@@ -40,6 +41,7 @@ model Vehicle {
   status       VehicleStatus @default(AVAILABLE)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  favorites    Favorite[]
 }
 
 model Booking {
@@ -60,6 +62,19 @@ model Booking {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Favorite {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  vehicleId String
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, vehicleId])
 }
 
 enum UserRole {

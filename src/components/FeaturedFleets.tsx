@@ -6,9 +6,11 @@ import VehicleCard from "./VehicleCard";
 import { getTopRentedVehicles } from "@/server/db/vehicle";
 import LoadMoreContainer from "./LoadMoreList";
 import { Heading } from "./Heading";
+import { getUserFavoriteIds } from "@/server/db/favorite";
 
 const FeaturedFleets = async () => {
   const topVehicles = await getTopRentedVehicles(8);
+  const userFavoriteIds = await getUserFavoriteIds();
 
   return (
     <section className="container-custom py-16">
@@ -37,7 +39,12 @@ const FeaturedFleets = async () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
         >
           {topVehicles.map((car, index) => (
-            <VehicleCard key={car.id} car={car} index={index} />
+            <VehicleCard
+              key={car.id}
+              car={car}
+              index={index}
+              isFavorite={userFavoriteIds.includes(car.id)}
+            />
           ))}
         </LoadMoreContainer>
       ) : (

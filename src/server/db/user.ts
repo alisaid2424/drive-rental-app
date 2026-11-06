@@ -1,29 +1,35 @@
 "use cache";
 
 import { cacheLife, cacheTag } from "next/cache";
-import clerkClient from "@clerk/clerk-sdk-node";
 import prisma from "@/lib/db";
 import { USERS_PER_PAGE } from "@/constants/enums";
 
-export async function getFavoritesUser(userId: string) {
-  cacheTag(`get-user-favorites-${userId}`);
+export async function getFavoritesUser(clerkUserId: string) {
+  cacheTag(`get-user-favorites-${clerkUserId}`);
   cacheLife({ revalidate: 3600 });
 
-  const user = await clerkClient.users.getUser(userId);
+  const dbUser = await prisma.user.findUnique({
+    where: { clerkUserId: clerkUserId },
+    select: { id: true },
+  });
 
-  const favorites = Array.isArray(user?.privateMetadata?.favorites)
-    ? (user.privateMetadata.favorites as string[])
-    : [];
+  if (!dbUser) {
+    return [];
+  }
 
-  if (!favorites.length) return [];
-
-  return prisma.vehicle.findMany({
+  const favorites = await prisma.favorite.findMany({
     where: {
-      id: {
-        in: favorites,
-      },
+      userId: dbUser.id,
+    },
+    include: {
+      vehicle: true,
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
+
+  return favorites.map((fav) => fav.vehicle);
 }
 
 export async function getBookingsUser(clerkUserId: string) {

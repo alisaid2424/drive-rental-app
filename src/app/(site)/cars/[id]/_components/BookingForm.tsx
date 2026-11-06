@@ -106,7 +106,7 @@ const BookingForm = ({ vehicleId, pricePerDay }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="min-w-sm xl:min-w-md rounded-3xl border border-slate-200 bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+        className="sm:min-w-sm xl:min-w-md rounded-3xl border border-slate-200 bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
       >
         {/* Header */}
         <div className="flex items-end justify-between flex-wrap gap-3">

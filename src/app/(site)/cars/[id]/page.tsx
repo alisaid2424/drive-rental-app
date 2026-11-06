@@ -9,6 +9,7 @@ import BookingForm from "./_components/BookingForm";
 import { getVehicle, getVehicles } from "@/server/db/vehicle";
 import { Vehicle } from "@prisma/client";
 import { Metadata } from "next";
+import { getUserFavoriteIds } from "@/server/db/favorite";
 
 type PageProps = {
   params: Promise<{
@@ -50,9 +51,9 @@ export async function generateMetadata({
 
 const CarDetailsPage = async ({ params }: PageProps) => {
   const { id } = await params;
-
-  const allVehicles = await getVehicles();
   const car = await getVehicle(id);
+  const allVehicles = await getVehicles();
+  const userFavoriteIds = await getUserFavoriteIds();
 
   if (!car) {
     notFound();
@@ -95,7 +96,7 @@ const CarDetailsPage = async ({ params }: PageProps) => {
               4.9 (128 Reviews)
             </span>
           </div>
-          <h2 className="text-3xl mb-2 font-black tracking-tight text-slate-900 uppercase leading-none">
+          <h2 className="text-[22px] sm:text-3xl mb-2 font-black tracking-tight text-slate-900 uppercase leading-none">
             {car.name}
           </h2>
           <p className="text-sm text-slate-500 leading-relaxed max-w-2xl font-medium">
@@ -113,7 +114,7 @@ const CarDetailsPage = async ({ params }: PageProps) => {
             <div className="flex-1 space-y-10">
               {/* Features List */}
               <div className="space-y-8">
-                <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tight">
+                <h2 className="text-[22px] sm:text-3xl font-black text-slate-900 uppercase tracking-tight">
                   Premium Features
                 </h2>
                 <div className="grid gap-4">
@@ -186,9 +187,9 @@ const CarDetailsPage = async ({ params }: PageProps) => {
       {/* Related Cars Section */}
       <div className="bg-slate-50/50 py-14 border-t border-slate-100">
         <div className="container-custom space-y-12">
-          <div className="flex justify-between items-end">
+          <div className="flex flex-col items-start sm:flex-row sm:justify-between sm:items-end gap-3">
             <div>
-              <h2 className="text-3xl font-black text-slate-900">
+              <h2 className="text-[22px] sm:text-3xl font-black text-slate-900">
                 Related Experiences
               </h2>
               <p className="text-slate-400 mt-1 text-sm font-medium">
@@ -205,9 +206,14 @@ const CarDetailsPage = async ({ params }: PageProps) => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10">
-            {allVehicles.slice(0, 3).map((car: Vehicle, index: number) => (
-              <VehicleCard key={car.id} car={car} index={index} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3! lg:gap-10">
+            {allVehicles.slice(0, 4).map((car: Vehicle, index: number) => (
+              <VehicleCard
+                key={car.id}
+                car={car}
+                index={index}
+                isFavorite={userFavoriteIds.includes(car.id)}
+              />
             ))}
           </div>
         </div>

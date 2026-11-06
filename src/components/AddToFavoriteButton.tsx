@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { updateFavoriteUser } from "@/server/actions/user";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { Heart } from "lucide-react";
+import { useTransition } from "react";
 import { toast } from "sonner";
 
 const AddToFavoriteButton = ({
@@ -15,6 +16,7 @@ const AddToFavoriteButton = ({
 }) => {
   const { user } = useUser();
   const { openSignIn } = useClerk();
+  const [isPending, startTransition] = useTransition();
 
   const handleAddToFavoriteButton = async (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -22,35 +24,38 @@ const AddToFavoriteButton = ({
     e.preventDefault();
     e.stopPropagation();
 
-    try {
-      if (!user) {
-        openSignIn();
-        return;
-      }
-
-      const res = await updateFavoriteUser(vehicleId, user.id);
-
-      if (res.status === 200) {
-        toast.success(res.message);
-      } else {
-        toast.error(res.message);
-      }
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Unexpected error occurred",
-      );
+    if (!user) {
+      openSignIn();
+      return;
     }
+
+    startTransition(async () => {
+      try {
+        const res = await updateFavoriteUser(vehicleId);
+
+        if (res.status === 200) {
+          toast.success(res.message);
+        } else {
+          toast.error(res.message);
+        }
+      } catch (error) {
+        toast.error(
+          error instanceof Error ? error.message : "Unexpected error occurred",
+        );
+      }
+    });
   };
 
   return (
     <Button
       size="icon"
       onClick={handleAddToFavoriteButton}
+      disabled={isPending}
       data-hover-icon
       aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
       className="
     absolute top-4 right-3 bg-white/30 backdrop-blur-md size-10 element-center p-3 rounded-full border-0 active:scale-95 
-    hover:bg-primary transition
+    hover:bg-primary transition disabled:opacity-50
   "
     >
       <Heart

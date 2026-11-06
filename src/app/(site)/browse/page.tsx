@@ -6,6 +6,7 @@ import VehicleCard from "@/components/VehicleCard";
 import { getVehiclesFilters } from "@/server/db/vehicle";
 import PaginationBrowse from "./_components/PaginationBrowse";
 import { Metadata } from "next";
+import { getUserFavoriteIds } from "@/server/db/favorite";
 
 export const metadata: Metadata = {
   title: "Browse Fleet",
@@ -34,19 +35,22 @@ const BrowsePage = async ({
 
   const page = Number(params.pageNumber) || 1;
 
-  const { vehicles, totalPages } = await getVehiclesFilters(
-    {
-      carQuery: params.carQuery,
-      rentalDate: params.rentalDate,
-      types: params.type?.split(","),
-      brands: params.brand?.split(","),
-      sort: params.sort,
-      availableNow: params.available === "true",
-      minPrice: Number(params.minPrice) || undefined,
-      maxPrice: Number(params.maxPrice) || undefined,
-    },
-    page,
-  );
+  const [{ vehicles, totalPages }, userFavoriteIds] = await Promise.all([
+    getVehiclesFilters(
+      {
+        carQuery: params.carQuery,
+        rentalDate: params.rentalDate,
+        types: params.type?.split(","),
+        brands: params.brand?.split(","),
+        sort: params.sort,
+        availableNow: params.available === "true",
+        minPrice: Number(params.minPrice) || undefined,
+        maxPrice: Number(params.maxPrice) || undefined,
+      },
+      page,
+    ),
+    getUserFavoriteIds(),
+  ]);
 
   return (
     <main className="container-custom py-24 flex flex-col sm:flex-row gap-5">
@@ -77,7 +81,12 @@ const BrowsePage = async ({
         {vehicles.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {vehicles.map((car, index) => (
-              <VehicleCard key={car.id} car={car} index={index} />
+              <VehicleCard
+                key={car.id}
+                car={car}
+                index={index}
+                isFavorite={userFavoriteIds.includes(car.id)}
+              />
             ))}
           </div>
         ) : (

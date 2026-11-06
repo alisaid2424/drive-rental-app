@@ -219,29 +219,52 @@ export async function updateUserInDBAndClerk({
   }
 }
 
-export async function updateFavoriteUser(vehicleId: string, userId: string) {
+export async function updateFavoriteUser(vehicleId: string) {
   try {
-    const user = await clerkClient.users.getUser(userId);
+    const { userId: clerkUserId } = await auth();
 
-    let favorites = (user.privateMetadata?.favorites as string[]) ?? [];
-
-    if (!Array.isArray(favorites)) {
-      favorites = [];
+    if (!clerkUserId) {
+      return {
+        status: 401,
+        message: "Unauthorized",
+      };
     }
 
-    // Toggle logic
-    if (!favorites.includes(vehicleId)) {
-      favorites.push(vehicleId);
-    } else {
-      favorites = favorites.filter((id) => id !== vehicleId);
+    const dbUser = await prisma.user.findUnique({
+      where: { clerkUserId },
+    });
+
+    if (!dbUser) {
+      return {
+        status: 404,
+        message: "User not found in database",
+      };
     }
 
-    await clerkClient.users.updateUserMetadata(userId, {
-      privateMetadata: {
-        ...user.privateMetadata,
-        favorites,
+    const userId = dbUser.id;
+    const existingFavorite = await prisma.favorite.findUnique({
+      where: {
+        userId_vehicleId: {
+          userId,
+          vehicleId,
+        },
       },
     });
+
+    if (existingFavorite) {
+      await prisma.favorite.delete({
+        where: {
+          id: existingFavorite.id,
+        },
+      });
+    } else {
+      await prisma.favorite.create({
+        data: {
+          userId,
+          vehicleId,
+        },
+      });
+    }
 
     revalidatePath(Routes.ROOT);
     revalidatePath(Pages.BROWSE);
@@ -249,8 +272,9 @@ export async function updateFavoriteUser(vehicleId: string, userId: string) {
 
     return {
       status: 200,
-      message: "Favorite vehicles updated",
-      favorites,
+      message: existingFavorite
+        ? "Removed from favorites"
+        : "Added to favorites",
     };
   } catch (error) {
     return {
