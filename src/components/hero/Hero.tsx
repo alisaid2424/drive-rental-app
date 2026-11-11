@@ -1,15 +1,6 @@
 import Image from "next/image";
-import dynamic from "next/dynamic";
-
-const FormSearchCarRental = dynamic(
-  () => import("./_components/FormSearchCarRental"),
-  {
-    ssr: true,
-    loading: () => (
-      <div className="mt-5 h-50 w-full max-w-5xl animate-pulse rounded-[32px] bg-white/10 md:mt-12 md:h-30 md:rounded-[40px]" />
-    ),
-  },
-);
+import Motion from "../Motion";
+import FormSearchCarRental from "./_components/FormSearchCarRental";
 
 const Hero = () => {
   return (
@@ -29,7 +20,7 @@ const Hero = () => {
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-8 pt-10 text-center">
-        <div>
+        <Motion fade={false}>
           <span className="mb-4 inline-block rounded-full bg-white/10 px-4 py-1 text-xs font-medium uppercase tracking-[0.2em] text-white backdrop-blur-md md:text-sm">
             Experience the Extraordinary
           </span>
@@ -39,7 +30,7 @@ const Hero = () => {
             Journey With <br />
             <span className="italic font-light text-primary">Elegance</span>
           </h1>
-        </div>
+        </Motion>
 
         <FormSearchCarRental />
       </div>

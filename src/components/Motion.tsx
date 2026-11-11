@@ -5,16 +5,23 @@ type MotionProps = {
   children: ReactNode;
   index?: number;
   className?: string;
+  fade?: boolean;
   as?: "div" | "tr";
 };
 
-const Motion = ({ children, className, index, as = "div" }: MotionProps) => {
+const Motion = ({
+  children,
+  className,
+  index,
+  as = "div",
+  fade = true,
+}: MotionProps) => {
   const Component = as === "tr" ? motion.tr : motion.div;
 
   return (
     <Component
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={fade ? { opacity: 0, y: 30 } : { y: 30 }}
+      whileInView={fade ? { opacity: 1, y: 0 } : { y: 0 }}
       whileHover={{ y: -6 }}
       transition={{
         duration: 0.6,
